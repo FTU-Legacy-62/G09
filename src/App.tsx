@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { PortfolioForm } from './components/PortfolioForm';
 import { MetricCard } from './components/MetricCard';
 import { AnalysisResponse, PortfolioItem } from './types';
+import finfolioWelcomeHero from './assets/images/finfolio_welcome_hero_1780461028405.png';
 
 const normalizeTicker = (ticker: string): string => {
   if (!ticker) return '';
@@ -786,7 +787,7 @@ export default function App() {
                   <div className="lg:col-span-5 flex justify-center">
                     <div className="relative w-48 h-48 rounded-full bg-indigo-50/50 flex items-center justify-center p-4">
                       <img 
-                        src="/src/assets/images/finfolio_welcome_hero_1780461028405.png" 
+                        src={finfolioWelcomeHero} 
                         alt="FinFolio Mascot" 
                         className="w-full h-full object-contain rounded-full"
                         referrerPolicy="no-referrer"
