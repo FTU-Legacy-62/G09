@@ -732,16 +732,6 @@ export default function App() {
           <SidebarItem icon={Play} label="Mô phỏng tài sản" tab="simulation" />
           <SidebarItem icon={Target} label="Tối ưu hóa tỷ trọng" tab="optimization" />
         </nav>
-        
-        <div className="p-6 border-t border-slate-200">
-          <div className="flex items-center gap-3 p-3.5 rounded-2xl bg-white border border-slate-200 shadow-[0_2px_12px_rgba(141,165,137,0.06)]">
-             <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-sm">K</div>
-             <div className="flex flex-col">
-                <span className="text-xs font-bold text-slate-900 leading-none">k63.241238</span>
-                <span className="text-[10px] text-slate-400 font-bold mt-1">Gói Miễn Phí</span>
-             </div>
-          </div>
-        </div>
       </aside>
 
       {/* Main Content */}
