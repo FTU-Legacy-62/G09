@@ -98,6 +98,8 @@ artifacts/
 backend/
 frontend/
 .gitignore
+GROUP_FOOTPRINT.md
+INDIVIDUAL_FOOTPRINT.md
 README.md
 package.json
 ```
@@ -470,5 +472,5 @@ Không đưa API key, mật khẩu, token, dữ liệu cá nhân hoặc dữ li�
 ## Ghi chú thêm
 
 - Repo chính thức của nhóm: `https://github.com/FTU-Legacy-62/G09`.
-- File `Footprint/GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, dữ liệu đầu vào, logic xử lý, luồng người dùng, kết quả đầu ra, lựa chọn thiết kế, hạn chế và bài học của nhóm.
-- Các file `Footprint/INDIVIDUAL_FOOTPRINT_*.md` ghi rõ đóng góp riêng của từng thành viên và bằng chứng liên quan.
+- File `GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, dữ liệu đầu vào, logic xử lý, luồng người dùng, kết quả đầu ra, lựa chọn thiết kế, hạn chế và bài học của nhóm.
+- File `INDIVIDUAL_FOOTPRINT.md` ghi rõ đóng góp riêng của từng thành viên và bằng chứng liên quan. Các bản tách riêng vẫn được lưu trong thư mục `Footprint/` để tiện đối chiếu.
