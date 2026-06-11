@@ -56,7 +56,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 **Bằng chứng chính:** `FinFolio_7_Week_Meeting_Minutes.docx`. Meeting minutes là evidence quan trọng nhất vì ghi rõ nhiệm vụ, output, deadline và trạng thái của từng thành viên theo từng tuần.
 
-| Tuần | Ghi trong meeting minutes | Output được ghi nhận | Vì sao chứng minh đóng góp cá nhân |
+|***Tuần***|***Ghi trong meeting minutes***|***Output được ghi nhận***|***Vì sao chứng minh đóng góp cá nhân***|
 | --- | --- | --- | --- |
 | Tuần 1 | Meeting Minutes ghi Hải kiểm tra khả năng lấy dữ liệu lịch sử, benchmark và hướng backend/API cho các ý tưởng. | Ghi chú technical feasibility + rủi ro data/API. | Chứng minh Hải tham gia từ bước đánh giá feasibility, không chỉ làm phần demo cuối. |
 | Tuần 2 | Hải kiểm tra historical price, benchmark proxy và thiết kế API response cho dashboard sau khi loại quét báo và DCF. | Feasibility note về Yahoo/Vietstock/VNDIRECT + API sơ bộ. | Góp phần giúp nhóm chốt FinFolio vì ý tưởng có dữ liệu và luồng xử lý khả thi. |
@@ -89,7 +89,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 ### **Khó khăn đã gặp và cách xử lý**
 
-| Khó khăn đã gặp | Cách xử lý |
+|**Khó khăn đã gặp**|**Cách xử lý**|
 | --- | --- |
 | Dữ liệu lịch sử và ticker có thể lỗi hoặc không đồng nhất. | Thiết kế normalize ticker, kiểm tra benchmark proxy, thêm hướng fallback và error message rõ hơn. |
 | Frontend cần đúng field từ backend để render chart/table. | Chốt /api/analyze schema ở tuần 3 và kiểm tra lại trong tuần 4-6 khi tích hợp. |
