@@ -1,8 +1,8 @@
 # Individual Footprint - Hải
 
-## Thành viên 1: Hải - [điền mã sinh viên]
-- **Họ tên:** Hải [điền họ tên đầy đủ]
-- **Mã sinh viên:** [điền mã sinh viên]
+## Thành viên 1: Hải - 2313380008
+- **Họ tên:** Bùi Thanh Hải
+- **Mã sinh viên:** 2313380008
 - **Dự án:** FinFolio - Portfolio Insight & Optimizer
 - **Môn học:** Technology Applications in Finance and Banking - NHA408E
 - **Nhóm:** Group 9
