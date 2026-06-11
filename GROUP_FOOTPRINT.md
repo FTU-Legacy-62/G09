@@ -13,7 +13,7 @@ https://github.com/FTU-Legacy-62/G09
 
 ## Link demo
 
-Chưa cập nhật.
+https://finfolio-axub.onrender.com/
 
 ## Vấn đề nhóm muốn giải quyết
 
