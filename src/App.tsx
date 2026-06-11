@@ -39,6 +39,7 @@ const normalizeTicker = (ticker: string): string => {
 
 type TabType = 'home' | 'input' | 'dashboard' | 'evaluation' | 'simulation' | 'optimization';
 type SimulatedStock = { ticker: string; shares: number; weight: number };
+type DisplayCurrency = 'VND' | 'USD';
 
 const USD_VND_RATE = 25400;
 
@@ -68,6 +69,7 @@ export default function App() {
   const [benchmark, setBenchmark] = useState('VNM');
   const [startDate, setStartDate] = useState('2023-05-12');
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
+  const [displayCurrency, setDisplayCurrency] = useState<DisplayCurrency>('VND');
 
   // Track if user explicitly changed benchmark
   const [isBenchmarkOverridden, setIsBenchmarkOverridden] = useState(false);
@@ -360,9 +362,8 @@ export default function App() {
     return `≈ ${amount.toLocaleString('vi-VN')} VND`;
   };
 
-  const formatPortfolioValue = (amountVND: number, tickers: string[]) => {
-    const isPureVNPortfolio = tickers.length > 0 && tickers.every(ticker => isVNStock(ticker));
-    if (isPureVNPortfolio) {
+  const formatConvertedValue = (amountVND: number, currency: DisplayCurrency) => {
+    if (currency === 'VND') {
       return `${amountVND.toLocaleString('vi-VN')} VND`;
     }
 
@@ -826,10 +827,12 @@ export default function App() {
               <div className="space-y-8">
                 <h2 className="text-4xl font-bold text-slate-900 tracking-tight">Nhập danh mục đầu tư</h2>
                 <div className="glass-card p-10">
-                  <PortfolioForm 
-                    items={portfolioItems}
-                    setItems={setPortfolioItems}
-                    benchmark={benchmark}
+	                  <PortfolioForm 
+	                    items={portfolioItems}
+	                    setItems={setPortfolioItems}
+	                    displayCurrency={displayCurrency}
+	                    setDisplayCurrency={setDisplayCurrency}
+	                    benchmark={benchmark}
                     setBenchmark={handleSetBenchmark}
                     startDate={startDate}
                     setStartDate={setStartDate}
@@ -1522,13 +1525,6 @@ export default function App() {
                       const target = normalizeTicker(simTicker.trim());
                       if (!target) return null;
 
-                      const baseItems = preSimData?.originalItems || portfolioItems;
-                      const projectionTickers = Array.from(new Set([
-                        ...baseItems.map((item: PortfolioItem) => item.ticker),
-                        ...simulatedStocks.map(stock => stock.ticker),
-                        target
-                      ]));
-
                       return (
                         <div className="col-span-1 md:col-span-4 border-t border-slate-100 pt-5 space-y-4">
                           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
@@ -1537,14 +1533,32 @@ export default function App() {
                               <h4 className="text-sm font-black text-slate-900">Danh mục sau khi thêm mã</h4>
                             </div>
                             <div className="md:text-right">
-                              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">Giá trị danh mục dự kiến</span>
+                              <div className="flex flex-wrap md:justify-end items-center gap-2 mb-1">
+                                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block">Giá trị danh mục dự kiến</span>
+                                <div className="inline-flex rounded-full bg-slate-100 p-1 border border-slate-200">
+                                  {(['VND', 'USD'] as const).map(currency => (
+                                    <button
+                                      key={currency}
+                                      type="button"
+                                      onClick={() => setDisplayCurrency(currency)}
+                                      className={`px-2.5 py-1 rounded-full text-[10px] font-black transition-all ${
+                                        displayCurrency === currency
+                                          ? 'bg-white text-indigo-700 shadow-sm'
+                                          : 'text-slate-400 hover:text-slate-700'
+                                      }`}
+                                    >
+                                      {currency}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
                               <span className="text-lg font-black text-slate-800">
                                 {simProjection?.loading ? (
                                   <span className="text-slate-300 text-sm inline-flex items-center gap-2">
                                     <RefreshCw size={12} className="animate-spin" /> Đang tính...
                                   </span>
                                 ) : simProjection ? (
-                                  formatPortfolioValue(simProjection.totalValueVND, projectionTickers)
+                                  formatConvertedValue(simProjection.totalValueVND, displayCurrency)
                                 ) : (
                                   '—'
                                 )}
@@ -1576,7 +1590,7 @@ export default function App() {
                                     <tr key={position.ticker} className={position.ticker.trim().toUpperCase() === target.toUpperCase() ? 'bg-indigo-50/50' : ''}>
                                       <td className="px-4 py-3 font-black text-slate-900 uppercase">{position.ticker}</td>
                                       <td className="px-4 py-3 text-right font-mono font-bold text-slate-650">{position.shares.toLocaleString('vi-VN')} CP</td>
-                                      <td className="px-4 py-3 text-right font-bold text-slate-500">≈ {position.valueVND.toLocaleString('vi-VN')} VND</td>
+                                      <td className="px-4 py-3 text-right font-bold text-slate-500">≈ {formatConvertedValue(position.valueVND, displayCurrency)}</td>
                                       <td className="px-4 py-3 text-right font-mono font-black text-indigo-700">{position.weight.toFixed(1)}%</td>
                                     </tr>
                                   ))

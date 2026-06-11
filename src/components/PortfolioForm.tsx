@@ -5,6 +5,8 @@ import { PortfolioItem } from '../types';
 interface PortfolioFormProps {
   items: PortfolioItem[];
   setItems: React.Dispatch<React.SetStateAction<PortfolioItem[]>>;
+  displayCurrency: 'VND' | 'USD';
+  setDisplayCurrency: React.Dispatch<React.SetStateAction<'VND' | 'USD'>>;
   benchmark: string;
   setBenchmark: (val: string) => void;
   startDate: string;
@@ -18,6 +20,8 @@ interface PortfolioFormProps {
 export const PortfolioForm: React.FC<PortfolioFormProps> = ({ 
   items, 
   setItems, 
+  displayCurrency,
+  setDisplayCurrency,
   benchmark, 
   setBenchmark, 
   startDate, 
@@ -230,17 +234,15 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
     setItems(nextItems);
   };
 
-  const isPureVN = items.every(item => isVNStock(item.ticker));
-
   const displayTotalValue = () => {
     const validItems = items.filter(item => item.ticker.trim() !== '');
-    if (validItems.length === 0) return '0 VND';
-    if (isPureVN) {
+    if (validItems.length === 0) return displayCurrency === 'VND' ? '0 VND' : '$0.00 USD';
+    if (displayCurrency === 'VND') {
       return `${totalValueVND.toLocaleString('vi-VN')} VND`;
-    } else {
-      const totalUSD = totalValueVND / USD_VND_RATE;
-      return `$${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
     }
+
+    const totalUSD = totalValueVND / USD_VND_RATE;
+    return `$${totalUSD.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD`;
   };
 
   const formatCurrency = (amount: number, currency: string) => {
@@ -500,7 +502,25 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
       <div className="bg-slate-900 text-white rounded-3xl p-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-6 shadow-xl relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-slate-800 to-indigo-950 opacity-50 pointer-events-none" />
         <div className="relative z-10 space-y-1">
-          <span className="text-[10px] font-black text-indigo-300 uppercase tracking-widest block">Tổng giá trị danh mục</span>
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[10px] font-black text-indigo-300 uppercase tracking-widest block">Tổng giá trị danh mục</span>
+            <div className="inline-flex rounded-full bg-white/10 p-1 border border-white/10">
+              {(['VND', 'USD'] as const).map(currency => (
+                <button
+                  key={currency}
+                  type="button"
+                  onClick={() => setDisplayCurrency(currency)}
+                  className={`px-3 py-1 rounded-full text-[10px] font-black transition-all ${
+                    displayCurrency === currency
+                      ? 'bg-white text-slate-900 shadow-sm'
+                      : 'text-slate-300 hover:text-white'
+                  }`}
+                >
+                  {currency}
+                </button>
+              ))}
+            </div>
+          </div>
           <span className="text-2xl sm:text-3xl font-black tracking-tight block">
             {displayTotalValue()}
           </span>
