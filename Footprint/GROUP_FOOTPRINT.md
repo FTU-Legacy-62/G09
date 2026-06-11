@@ -23,15 +23,13 @@ Vấn đề này xảy ra trong bối cảnh người dùng cá nhân thường 
 
 Những người bị ảnh hưởng là cá nhân đang quản lý danh mục đầu tư, sinh viên tài chính muốn học phân tích danh mục và nhà đầu tư mới đến trung cấp chưa quen tự tính các chỉ số như CAGR, Volatility, Sharpe Ratio, Max Drawdown, Beta, Alpha, Tracking Error hoặc Correlation Matrix.
 
-Trong quá trình chọn đề tài, nhóm đã cân nhắc ba hướng: quét báo/tin tài chính, công cụ DCF đơn giản và dashboard phân tích danh mục. Sau khi rà soát tính khả thi và phản hồi giảng viên, nhóm loại bỏ hướng quét báo vì khó kiểm soát dữ liệu và dễ lệch khỏi finance logic; loại bỏ DCF vì quá hẹp và ít đất chia việc cho nhóm. Nhóm chốt FinFolio cuối tuần 2 vì đề tài có input, logic tài chính, xử lý dữ liệu, dashboard và demo flow rõ ràng.
-
 ## Người dùng mục tiêu
 
 Người dùng chính của sản phẩm là:
 
-- Nhà đầu tư cá nhân đang có một danh mục cổ phiếu/ETF/tài sản tài chính và muốn tự review danh mục.
+- Nhà đầu tư cá nhân đang có một danh mục cổ phiếu/tài sản tài chính và muốn tự review danh mục.
 - Sinh viên tài chính cần công cụ học cách đọc return, risk, benchmark và diversification ở mức danh mục.
-- Nhà đầu tư beginner-to-intermediate muốn có dashboard dễ hiểu thay vì tự tính trong spreadsheet.
+- Nhà đầu tư beginner-to-intermediate muốn có dashboard dễ hiểu thay vì tự tính.
 
 Người dùng cần:
 
