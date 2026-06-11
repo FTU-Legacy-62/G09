@@ -1,8 +1,8 @@
-# Individual Footprint - Hưng
+# Individual Footprint
 
-## Thành viên 2: Hưng - [điền mã sinh viên]
-- **Họ tên:** Hưng [điền họ tên đầy đủ]
-- **Mã sinh viên:** [điền mã sinh viên]
+## Thành viên 2: Nguyễn Trịnh Thái Hưng - 2312380805
+- **Họ tên:** Nguyễn Trịnh Thái Hưng
+- **Mã sinh viên:** 2312380805
 - **Dự án:** FinFolio - Portfolio Insight & Optimizer
 - **Môn học:** Technology Applications in Finance and Banking - NHA408E
 - **Nhóm:** Group 9
