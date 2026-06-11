@@ -457,11 +457,11 @@ App dùng nguồn dữ liệu bên ngoài như Yahoo Finance. Nếu một mã kh
 - Dùng mã giao dịch có hậu tố `.VN`, ví dụ `FPT.VN`, `HPG.VN`, `MWG.VN`.
 - Thử lại sau vài phút.
 
-## Link demo nếu có
+## Link demo
 
 - Link demo: https://finfolio-axub.onrender.com/
 
-## Ghi chú về dữ liệu nếu có
+## Ghi chú về dữ liệu
 
 Sản phẩm sử dụng dữ liệu giá lịch sử công khai qua các nguồn API như Yahoo Finance hoặc nguồn thị trường tương đương trong phạm vi demo. Với mã chứng khoán Việt Nam, nhóm có chuẩn hóa mã bằng hậu tố như `.VN` và có định hướng chuẩn bị CSV/dataset mẫu để tránh lỗi khi API không trả đủ dữ liệu. Dữ liệu dùng cho demo chỉ phục vụ phân tích lịch sử, không phải dữ liệu riêng tư của người dùng và không dùng để đảm bảo kết quả tương lai.
 
@@ -470,6 +470,5 @@ Không đưa API key, mật khẩu, token, dữ liệu cá nhân hoặc dữ li�
 ## Ghi chú thêm
 
 - Repo chính thức của nhóm: `https://github.com/FTU-Legacy-62/G09`.
-- Sản phẩm chính là ứng dụng web bản mẫu trong repo, không phải slide thuyết trình.
 - File `Footprint/GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, dữ liệu đầu vào, logic xử lý, luồng người dùng, kết quả đầu ra, lựa chọn thiết kế, hạn chế và bài học của nhóm.
 - Các file `Footprint/INDIVIDUAL_FOOTPRINT_*.md` ghi rõ đóng góp riêng của từng thành viên và bằng chứng liên quan.
