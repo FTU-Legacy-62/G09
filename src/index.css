@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Cream and Sage Palette mappings */
+  --bg-cream: #f9f8f4;
+  --color-sage-primary: #8da589;
+  --color-sage-dark: #5c705a;
+  --color-sage-light: #e6ebe5;
+  --color-pastel-yellow: #f8f3db;
+  --color-pastel-pink: #f5e4e0;
+  --color-pastel-coral: #e4978f;
+
+  /* Aliasing Slate colors to warm neutrals & off-whites */
+  --color-slate-50: #f9f8f4;
+  --color-slate-100: #f2efe7;
+  --color-slate-200: #e7e2d6;
+  --color-slate-300: #cac4b5;
+  --color-slate-400: #a9a191;
+  --color-slate-500: #887f6f;
+  --color-slate-600: #6b6253;
+  --color-slate-700: #50483c;
+  --color-slate-800: #383229;
+  --color-slate-900: #25211a;
+  --color-slate-950: #14120e;
+
+  /* Aliasing Indigo to Sage green scales so the app transforms instantly */
+  --color-indigo-50: #f1f4f0;
+  --color-indigo-100: #e3eae1;
+  --color-indigo-200: #c9d6c5;
+  --color-indigo-300: #abc0a7;
+  --color-indigo-400: #8ca588;
+  --color-indigo-500: #718a6e;
+  --color-indigo-600: #5c705a;
+  --color-indigo-700: #495947;
+  --color-indigo-800: #384336;
+  --color-indigo-900: #272f26;
+  --color-indigo-950: #161b15;
+
+  /* Aliasing Emerald to Sage highlights */
+  --color-emerald-50: #f1f6f0;
+  --color-emerald-100: #e2ede0;
+  --color-emerald-500: #718a6e;
+  --color-emerald-600: #5c705a;
+  --color-emerald-700: #495947;
+
+  /* Aliasing Red/Rose to Pale Pastel Pink/Coral */
+  --color-rose-50: #fcf4f2;
+  --color-rose-100: #f7deda;
+  --color-rose-200: #f0bdbe;
+  --color-rose-500: #e4978f;
+  --color-rose-600: #cc7871;
+  --color-rose-700: #af5c56;
+  --color-rose-800: #934641;
+  --color-rose-900: #76332f;
+}
+
+body {
+  font-family: "Quicksand", ui-sans-serif, system-ui, sans-serif;
+  background-color: #f9f8f4;
+  color: #383229;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sidebar-active {
+  background-color: #e3eae1 !important;
+  color: #495947 !important;
+  border-right: 4px solid #718a6e !important;
+}
+
+.glass-card {
+  background-color: #ffffff;
+  border: 1px solid #e7e2d6;
+  border-radius: 1.5rem; /* 24px rounded */
+  box-shadow: 0 4px 20px -3px rgba(107, 98, 83, 0.04);
+}
+
+/* Rounded inputs and elements matching picture styling */
+input, select, textarea {
+  border-radius: 9999px !important;
+}
+
+/* Custom fade animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

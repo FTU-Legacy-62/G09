@@ -1,0 +1,8 @@
+{
+  "name": "FinFolio",
+  "description": "Phân tích, đánh giá và tối ưu hóa danh mục đầu tư cá nhân với các chỉ số tài chính chuyên sâu và so sánh benchmark.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
