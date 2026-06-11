@@ -73,7 +73,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ title, value, label, mes
             </span>
           )}
         </div>
-        <p className="text-[11px] leading-relaxed font-medium text-slate-400 capitalize">{message}</p>
+        <p className="text-[11px] leading-relaxed font-medium text-slate-400">{message}</p>
       </div>
     </motion.div>
   );

@@ -102,14 +102,14 @@ const fetchHistoricalSafe = async (ticker: string, p1: string, p2: string) => {
   try {
     return await tryFetch(tNorm);
   } catch (err: any) {
-    console.error(`Yahoo Finance primary fetch failed for ${tNorm}: ${err.message}`);
+    console.error(`Lần lấy dữ liệu chính từ Yahoo Finance thất bại cho ${tNorm}: ${err.message}`);
     
     // Fallback if some ticker fails: try suffix fallback if user didn't write it or typed it differently
     if (!tNorm.includes('.') && !tNorm.startsWith('^') && !tNorm.includes('=') && !tNorm.includes('-')) {
       const suffixes = ['.VN', '.HM', '.HS'];
       for (const suffix of suffixes) {
         try {
-          console.log(`Trying fallback suffix ${suffix} for ${tNorm}...`);
+          console.log(`Thử hậu tố dự phòng ${suffix} cho ${tNorm}...`);
           return await tryFetch(tNorm + suffix);
         } catch (e: any) {
           // continue
@@ -131,7 +131,7 @@ app.get("/api/price", async (req, res) => {
   try {
     const { ticker } = req.query;
     if (!ticker || typeof ticker !== 'string') {
-      return res.status(400).json({ error: "Thiếu ticker" });
+      return res.status(400).json({ error: "Thiếu mã cổ phiếu" });
     }
     const norm = normalizeTicker(ticker);
     const q = await yahooFinance.quote(norm);
@@ -143,7 +143,7 @@ app.get("/api/price", async (req, res) => {
       return res.status(404).json({ error: `Không tìm thấy thông tin cho mã ${norm}` });
     }
   } catch (error: any) {
-    console.error(`Error in /api/price:`, error.message);
+    console.error(`Lỗi trong /api/price:`, error.message);
     return res.status(500).json({ error: `Lỗi tải giá cho mã: ${error.message}` });
   }
 });
@@ -174,7 +174,7 @@ app.post("/api/analyze", async (req, res) => {
           try {
             historicalData[ticker] = await fetchHistoricalSafe(ticker, startDate, endDate);
           } catch (err: any) {
-            console.error(`Error fetching portfolio stock ${ticker}:`, err);
+            console.error(`Lỗi khi lấy dữ liệu cổ phiếu ${ticker}:`, err);
             throw new Error(ticker);
           }
         })
@@ -189,7 +189,7 @@ app.post("/api/analyze", async (req, res) => {
     // Now safely fetch the benchmark
     let fetchedBenchmark: any[] = [];
     try {
-      console.log(`Fetching benchmark: ${benchmark}`);
+      console.log(`Đang lấy dữ liệu Benchmark: ${benchmark}`);
       fetchedBenchmark = await fetchHistoricalSafe(benchmark, startDate, endDate);
     } catch (err: any) {
       return res.status(404).json({ 
@@ -220,7 +220,7 @@ app.post("/api/analyze", async (req, res) => {
 
     if (!fetchedBenchmark || fetchedBenchmark.length < 2) {
       return res.status(400).json({ 
-        error: `Không đủ dữ liệu cho chỉ số benchmark "${benchmark}" trên Yahoo Finance.` 
+        error: `Không đủ dữ liệu cho Benchmark "${benchmark}" trên Yahoo Finance.`
       });
     }
 
@@ -467,27 +467,27 @@ app.post("/api/analyze", async (req, res) => {
     // Evaluation Engine
     const evaluateMetric = (key: string, val: number, bVal?: number) => {
         if (key === 'sharpe') {
-            if (val < 1) return { status: 'red', label: 'Underperforming', message: 'Returns do not sufficiently compensate for the portfolio risk (Sharpe < 1).' };
-            if (val < 2) return { status: 'yellow', label: 'Acceptable', message: 'Risk-adjusted return is at an average level (Sharpe 1-2).' };
-            return { status: 'green', label: 'Excellent', message: 'Exceptional investment performance relative to drawdown and volatility.' };
+            if (val < 1) return { status: 'red', label: 'Cần cải thiện', message: 'Lợi nhuận chưa bù đắp tương xứng cho rủi ro danh mục (Sharpe < 1).' };
+            if (val < 2) return { status: 'yellow', label: 'Chấp nhận được', message: 'Lợi nhuận điều chỉnh theo rủi ro ở mức trung bình (Sharpe 1-2).' };
+            return { status: 'green', label: 'Xuất sắc', message: 'Hiệu suất đầu tư nổi bật so với Max Drawdown và Volatility.' };
         }
         if (key === 'cagr') {
             const diff = val - (bVal || 0);
-            if (diff > 0.02) return { status: 'green', label: 'Outperforming', message: `Annualized return exceeds the benchmark by ${ (diff * 100).toFixed(2) }%/year.` };
-            if (diff < -0.02) return { status: 'red', label: 'Underperforming', message: `Annualized return trails the benchmark by ${ (Math.abs(diff) * 100).toFixed(2) }%/year.` };
-            return { status: 'yellow', label: 'Benchmark-Matching', message: 'Annualized return is highly comparable to the specified benchmark.' };
+            if (diff > 0.02) return { status: 'green', label: 'Vượt Benchmark', message: `CAGR cao hơn Benchmark ${ (diff * 100).toFixed(2) }%/năm.` };
+            if (diff < -0.02) return { status: 'red', label: 'Thấp hơn Benchmark', message: `CAGR thấp hơn Benchmark ${ (Math.abs(diff) * 100).toFixed(2) }%/năm.` };
+            return { status: 'yellow', label: 'Tương đương Benchmark', message: 'CAGR gần tương đương với Benchmark đã chọn.' };
         }
-        return { status: 'neutral', label: 'Moderate', message: 'Metric behaves within stable ranges.' };
+        return { status: 'neutral', label: 'Ổn định', message: 'Chỉ số đang nằm trong vùng ổn định.' };
     };
 
     const evaluation = {
-        overallRating: metrics.sharpe < 1 ? "Needs Improvement" : "Strong Performance",
-        summary: "Based on historical backtesting, your portfolio " + (metrics.sharpe < 1 ? "is currently taking on high levels of volatility relative to returns." : "demonstrates highly efficient risk-adjusted performance."),
+        overallRating: metrics.sharpe < 1 ? "Cần cải thiện" : "Hiệu suất tốt",
+        summary: "Dựa trên backtest lịch sử, danh mục của bạn " + (metrics.sharpe < 1 ? "đang chịu mức Volatility cao so với lợi nhuận thu được." : "cho thấy hiệu quả lợi nhuận điều chỉnh theo rủi ro tốt."),
         details: {
             cagr: evaluateMetric('cagr', metrics.cagr, bMetrics.cagr),
             sharpe: evaluateMetric('sharpe', metrics.sharpe),
-            volatility: { status: metrics.volatility > bMetrics.volatility ? 'orange' : 'green', label: metrics.volatility > bMetrics.volatility ? 'High' : 'Low', message: `Annualized volatility is ${(metrics.volatility * 100).toFixed(2)}%.` },
-            maxDrawdown: { status: Math.abs(metrics.maxDrawdown) > 0.35 ? 'red' : 'green', label: Math.abs(metrics.maxDrawdown) > 0.35 ? 'Dangerous' : 'Healthy', message: `Maximum historic peak-to-trough drawdown recorded at ${(metrics.maxDrawdown * 100).toFixed(1)}%.` }
+            volatility: { status: metrics.volatility > bMetrics.volatility ? 'orange' : 'green', label: metrics.volatility > bMetrics.volatility ? 'Cao' : 'Thấp', message: `Volatility hằng năm là ${(metrics.volatility * 100).toFixed(2)}%.` },
+            maxDrawdown: { status: Math.abs(metrics.maxDrawdown) > 0.35 ? 'red' : 'green', label: Math.abs(metrics.maxDrawdown) > 0.35 ? 'Rủi ro cao' : 'Lành mạnh', message: `Max Drawdown lịch sử lớn nhất là ${(metrics.maxDrawdown * 100).toFixed(1)}%.` }
         }
     };
 
@@ -570,7 +570,7 @@ app.post("/api/optimize", async (req, res) => {
           try {
             historicalData[ticker] = await fetchHistoricalSafe(ticker, startDate, endDate);
           } catch (err: any) {
-            console.error(`Error fetching portfolio stock ${ticker}:`, err);
+            console.error(`Lỗi khi lấy dữ liệu cổ phiếu ${ticker}:`, err);
             throw new Error(ticker);
           }
         })
@@ -768,14 +768,14 @@ function generateRuleBasedAnalysis(portfolioData: any, benchmark: string) {
   const formatPercent = (v: number) => `${(v * 100).toFixed(2)}%`;
   const formatNum = (v: number) => v.toFixed(2);
   
-  const overallSummary = `Danh mục đầu tư có tỷ suất sinh lời lũy kế đạt ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bMetrics.cumulativeReturn || 0)} của benchmark ${benchmark}. Chỉ số Sharpe đạt ${formatNum(pMetrics.sharpe)} thể hiện hiệu quả sử dụng vốn điều chỉnh theo rủi ro ở mức ${pMetrics.sharpe >= 1 ? 'tốt và tối ưu' : 'cần cải thiện thông qua tái phân bổ tỉ trọng các lớp tài sản'}.`;
+  const overallSummary = `Danh mục đầu tư có tỷ suất sinh lời lũy kế đạt ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bMetrics.cumulativeReturn || 0)} của Benchmark ${benchmark}. Chỉ số Sharpe đạt ${formatNum(pMetrics.sharpe)} thể hiện hiệu quả sử dụng vốn điều chỉnh theo rủi ro ở mức ${pMetrics.sharpe >= 1 ? 'tốt và tối ưu' : 'cần cải thiện thông qua tái phân bổ tỉ trọng các lớp tài sản'}.`;
   
   const metricInsights = [
     {
       metric: "CAGR",
       value: formatPercent(pMetrics.cagr),
       comment: pMetrics.cagr > (bMetrics.cagr || 0)
-        ? `Lợi nhuận gộp hằng năm vượt trội so với benchmark (${formatPercent(bMetrics.cagr || 0)}), khẳng định sự tối ưu trong tỷ trọng nhóm cổ phiếu lựa chọn.`
+        ? `Lợi nhuận gộp hằng năm vượt trội so với Benchmark (${formatPercent(bMetrics.cagr || 0)}), khẳng định sự tối ưu trong tỷ trọng nhóm cổ phiếu lựa chọn.`
         : `Tỷ suất tăng trưởng hằng năm đang kém hiệu quả hơn so với chỉ số tham chiếu thị trường, đề xuất rà soát kỹ để tối ưu hóa giá trị tích lũy dài hạn.`
     },
     {
@@ -824,7 +824,7 @@ function generateRuleBasedAnalysis(portfolioData: any, benchmark: string) {
 app.post("/api/gemini/generate-analysis", async (req, res) => {
   const { portfolioData, benchmark } = req.body;
   if (!portfolioData) {
-    return res.status(400).json({ error: "Missing portfolioData" });
+    return res.status(400).json({ error: "Thiếu dữ liệu danh mục" });
   }
 
   try {
@@ -841,37 +841,37 @@ app.post("/api/gemini/generate-analysis", async (req, res) => {
     const formatNum = (v: number) => v.toFixed(2);
 
     const prompt = `
-      You are an experienced senior investment analyst specializing in Vietnamese and global equities.
-      Analyze the provided portfolio performance and benchmark comparison, and then generate highly professional and insightful commentary in VIETNAMESE.
+      Bạn là chuyên gia phân tích đầu tư giàu kinh nghiệm, am hiểu cổ phiếu Việt Nam và cổ phiếu toàn cầu.
+      Hãy phân tích hiệu suất danh mục và phần so sánh với Benchmark được cung cấp, sau đó tạo nhận xét chuyên nghiệp, sâu sắc bằng TIẾNG VIỆT.
       
-      Respond STRICTLY with a valid JSON object matching the schema below. Do NOT wrap the JSON in Markdown code blocks (like \`\`\`json ... \`\`\`), backticks, or any non-JSON wrapping.
+      Chỉ trả lời bằng một object JSON hợp lệ đúng theo cấu trúc bên dưới. Không bọc JSON trong Markdown code block (ví dụ \`\`\`json ... \`\`\`), backtick hoặc bất kỳ lớp bao ngoài nào.
       
-      Schema:
+      Cấu trúc:
       {
-        "overallSummary": "A concise, elegant 2-sentence summary in VIETNAMESE covering historical return quality, risk efficiency, and correlation profile.",
+        "overallSummary": "Tóm tắt ngắn gọn 2 câu bằng TIẾNG VIỆT về chất lượng lợi nhuận lịch sử, hiệu quả rủi ro và hồ sơ tương quan.",
         "metricInsights": [
-          { "metric": "CAGR", "value": "x%", "comment": "Commentary in VIETNAMESE analyzing what the compound growth rate tells about this allocation." },
-          { "metric": "Volatility", "value": "x%", "comment": "Commentary in VIETNAMESE analyzing risk profile." },
-          { "metric": "Sharpe Ratio", "value": "x", "comment": "Commentary in VIETNAMESE analyzing risk-adjusted efficiency." },
-          { "metric": "Max Drawdown", "value": "x%", "comment": "Commentary in VIETNAMESE analyzing historically worst downside draw." }
+          { "metric": "CAGR", "value": "x%", "comment": "Nhận xét bằng TIẾNG VIỆT về ý nghĩa của tốc độ tăng trưởng kép đối với cách phân bổ này." },
+          { "metric": "Volatility", "value": "x%", "comment": "Nhận xét bằng TIẾNG VIỆT về hồ sơ rủi ro." },
+          { "metric": "Sharpe Ratio", "value": "x", "comment": "Nhận xét bằng TIẾNG VIỆT về hiệu quả điều chỉnh theo rủi ro." },
+          { "metric": "Max Drawdown", "value": "x%", "comment": "Nhận xét bằng TIẾNG VIỆT về mức sụt giảm lịch sử xấu nhất." }
         ],
         "strategicAdvice": [
-          "VIETNAMESE constructive advice item 1 - on weights rebalancing or high asset correlation reduction.",
-          "VIETNAMESE constructive advice item 2 - on protective hedge or growth diversification.",
-          "VIETNAMESE constructive advice item 3 - on dollar cost average or exit strategy."
+          "Gợi ý xây dựng bằng TIẾNG VIỆT về tái cân bằng tỷ trọng hoặc giảm tương quan tài sản quá cao.",
+          "Gợi ý xây dựng bằng TIẾNG VIỆT về phòng vệ rủi ro hoặc đa dạng hóa tăng trưởng.",
+          "Gợi ý xây dựng bằng TIẾNG VIỆT về trung bình giá hoặc chiến lược thoát vị thế."
         ],
-        "marketComparison": "In-depth analysis in VIETNAMESE on the portfolio's active outperformance/underperformance versus benchmark index."
+        "marketComparison": "Phân tích chuyên sâu bằng TIẾNG VIỆT về việc danh mục đang vượt trội hay kém hơn Benchmark."
       }
 
-      DATASET:
-      Benchmark Symbol: ${benchmark}
-      - Cumulative Return: ${formatPercent(portfolioData.portfolioMetrics.cumulativeReturn)}
+      DỮ LIỆU:
+      Mã Benchmark: ${benchmark}
+      - Tổng lợi nhuận: ${formatPercent(portfolioData.portfolioMetrics.cumulativeReturn)}
       - CAGR: ${formatPercent(portfolioData.portfolioMetrics.cagr)}
       - Volatility: ${formatPercent(portfolioData.portfolioMetrics.volatility)}
       - Sharpe Ratio: ${formatNum(portfolioData.portfolioMetrics.sharpe)}
       - Max Drawdown: ${formatPercent(portfolioData.portfolioMetrics.maxDrawdown)}
-      - Beta (systematic risk): ${formatNum(portfolioData.portfolioMetrics.beta)}
-      - Alpha (excess return): ${formatPercent(portfolioData.portfolioMetrics.alpha)}
+      - Beta (rủi ro hệ thống): ${formatNum(portfolioData.portfolioMetrics.beta)}
+      - Alpha (lợi nhuận vượt trội): ${formatPercent(portfolioData.portfolioMetrics.alpha)}
       - Tracking Error: ${formatPercent(portfolioData.portfolioMetrics.trackingError)}
       - Information Ratio: ${formatNum(portfolioData.portfolioMetrics.informationRatio)}
     `;
@@ -882,7 +882,7 @@ app.post("/api/gemini/generate-analysis", async (req, res) => {
     
     for (const modelToTry of activeModels) {
       try {
-        console.log(`Attempting Gemini AI analysis using model: ${modelToTry}`);
+        console.log(`Đang thử phân tích bằng Gemini AI với model: ${modelToTry}`);
         const response = await ai.models.generateContent({
           model: modelToTry,
           contents: prompt,
@@ -893,18 +893,18 @@ app.post("/api/gemini/generate-analysis", async (req, res) => {
         if (response && response.text) {
           responseText = response.text;
           success = true;
-          console.log(`Successfully generated analysis with model: ${modelToTry}`);
+          console.log(`Tạo phân tích thành công với model: ${modelToTry}`);
           break;
         }
       } catch (err: any) {
-        console.log(`Model ${modelToTry} failed: ${err.message}`);
+        console.log(`Model ${modelToTry} thất bại: ${err.message}`);
       }
     }
 
     if (success) {
       res.json({ text: responseText });
     } else {
-      console.log("All server-side Gemini models failed or key is denied access. Executing rule-based high quality Vietnamese fallback.");
+      console.log("Tất cả model Gemini phía server đều thất bại hoặc key bị từ chối quyền truy cập. Đang dùng phân tích dự phòng bằng luật.");
       const fallbackData = generateRuleBasedAnalysis(portfolioData, benchmark);
       res.json({ text: JSON.stringify(fallbackData) });
     }

@@ -1,4 +1,4 @@
-# FinFolio - Portfolio Insight & Optimizer
+# FinFolio - Công cụ phân tích và tối ưu danh mục đầu tư
 
 ## Mã nhóm
 
@@ -8,35 +8,35 @@ G09
 
 | Họ tên | Mã sinh viên | Vai trò chính |
 |---|---|---|
-| Phương | Chưa cập nhật | Product Planning + Input/Data Design |
-| Ngọc | Chưa cập nhật | Financial Logic + Backend Calculation |
-| Hưng | Chưa cập nhật | UI/UX Design + Dashboard Visualization Plan |
-| An Thái | Chưa cập nhật | Frontend Core Pages |
-| Hải | Chưa cập nhật | Backend/Frontend Integration + Charts + Simulation |
+| Phương | Chưa cập nhật | Lập kế hoạch sản phẩm và thiết kế luồng nhập dữ liệu |
+| Ngọc | Chưa cập nhật | Logic tài chính và tính toán backend |
+| Hưng | Chưa cập nhật | Thiết kế UI/UX và kế hoạch trực quan hóa bảng điều khiển |
+| An Thái | Chưa cập nhật | Xây dựng các trang chính phía frontend |
+| Hải | Chưa cập nhật | Tích hợp backend/frontend, biểu đồ và mô phỏng |
 
 ## Mô tả ngắn về sản phẩm
 
-FinFolio là một web prototype hỗ trợ người dùng phân tích danh mục đầu tư cá nhân. Người dùng nhập mã tài sản, số lượng cổ phiếu, benchmark và khoảng thời gian phân tích; hệ thống tự lấy giá, quy đổi thành giá trị danh mục, tính tỷ trọng và xử lý dữ liệu giá lịch sử để tạo dashboard về lợi nhuận, rủi ro, tương quan, so sánh benchmark và mô phỏng thay đổi danh mục. Sản phẩm hướng tới mục tiêu học tập và chuẩn bị quyết định đầu tư, không phải nền tảng giao dịch thật. FinFolio không thực hiện mua/bán và không đưa ra khuyến nghị đầu tư được bảo đảm.
+FinFolio là bản mẫu web hỗ trợ người dùng phân tích danh mục đầu tư cá nhân. Người dùng nhập mã tài sản, số lượng cổ phiếu, Benchmark và khoảng thời gian phân tích; hệ thống tự lấy giá, quy đổi thành giá trị danh mục, tính tỷ trọng và xử lý dữ liệu giá lịch sử để tạo bảng điều khiển về lợi nhuận, rủi ro, tương quan, so sánh Benchmark và mô phỏng thay đổi danh mục. Sản phẩm hướng tới mục tiêu học tập và chuẩn bị quyết định đầu tư, không phải nền tảng giao dịch thật. FinFolio không thực hiện mua/bán và không đưa ra khuyến nghị đầu tư được bảo đảm.
 
 ## Vấn đề sản phẩm giải quyết
 
-Nhiều nhà đầu tư cá nhân chỉ nhìn từng cổ phiếu tăng hay giảm mà chưa hiểu chất lượng của toàn bộ danh mục. Khi phân tích thủ công, người dùng phải tự thu thập giá lịch sử, căn ngày giao dịch, tính lợi nhuận, độ biến động, drawdown, Sharpe Ratio, tương quan và so sánh benchmark. Quá trình này tốn thời gian, dễ sai công thức và khó trình bày thành dashboard dễ hiểu.
+Nhiều nhà đầu tư cá nhân chỉ nhìn từng cổ phiếu tăng hay giảm mà chưa hiểu chất lượng của toàn bộ danh mục. Khi phân tích thủ công, người dùng phải tự thu thập giá lịch sử, căn ngày giao dịch, tính lợi nhuận, độ biến động, drawdown, Sharpe Ratio, tương quan và so sánh Benchmark. Quá trình này tốn thời gian, dễ sai công thức và khó trình bày thành bảng điều khiển dễ hiểu.
 
-FinFolio giải quyết vấn đề này bằng cách gom quá trình phân tích danh mục vào một luồng web app: nhập danh mục, xử lý dữ liệu, tính toán chỉ số tài chính, hiển thị biểu đồ và mô phỏng thay đổi tỷ trọng.
+FinFolio giải quyết vấn đề này bằng cách gom quá trình phân tích danh mục vào một luồng ứng dụng web: nhập danh mục, xử lý dữ liệu, tính toán chỉ số tài chính, hiển thị biểu đồ và mô phỏng thay đổi tỷ trọng.
 
 ## Người dùng mục tiêu
 
-Người dùng chính của FinFolio là cá nhân đang theo dõi danh mục đầu tư, sinh viên tài chính và nhà đầu tư mới đến trung cấp. Họ dùng sản phẩm khi muốn xem danh mục hiện tại có tăng trưởng tốt không, rủi ro có quá cao không, tài sản có quá tương quan không, danh mục có tốt hơn benchmark không và việc thêm một cổ phiếu mới có thể làm kết quả lịch sử thay đổi như thế nào.
+Người dùng chính của FinFolio là cá nhân đang theo dõi danh mục đầu tư, sinh viên tài chính và nhà đầu tư mới đến trung cấp. Họ dùng sản phẩm khi muốn xem danh mục hiện tại có tăng trưởng tốt không, rủi ro có quá cao không, tài sản có quá tương quan không, danh mục có tốt hơn Benchmark không và việc thêm một cổ phiếu mới có thể làm kết quả lịch sử thay đổi như thế nào.
 
 ## Tính năng chính
 
-- Nhập danh mục gồm ticker, số lượng cổ phiếu, benchmark, ngày bắt đầu và ngày kết thúc; hệ thống tự tính giá trị và tỷ trọng.
-- Phân tích dashboard với các chỉ số như CAGR, Volatility, Sharpe Ratio, Sortino Ratio, Max Drawdown, VaR/CVaR, Beta, Alpha, Tracking Error, Information Ratio và Correlation.
-- So sánh hiệu suất danh mục với benchmark qua đường lợi nhuận/tăng trưởng lịch sử.
-- Hiển thị asset table, allocation chart và correlation matrix để hỗ trợ đánh giá diversification.
-- Mô phỏng what-if khi thêm một ticker mới và so sánh danh mục hiện tại với danh mục sau mô phỏng.
-- Tối ưu hóa tỷ trọng theo hai hướng: maximize Sharpe Ratio hoặc minimize Volatility trong phạm vi ràng buộc.
-- Tạo phần giải thích bằng ngôn ngữ tự nhiên/AI-supported analysis để giúp người dùng hiểu kết quả, với nhãn rõ ràng rằng đây là historical analysis, không phải lời khuyên mua/bán.
+- Nhập danh mục gồm mã cổ phiếu, số lượng cổ phiếu, Benchmark, ngày bắt đầu và ngày kết thúc; hệ thống tự tính giá trị và tỷ trọng.
+- Phân tích bảng điều khiển với các chỉ số như CAGR, Volatility, Sharpe Ratio, Sortino Ratio, Max Drawdown, VaR/CVaR, Beta, Alpha, Tracking Error, Information Ratio và Correlation.
+- So sánh hiệu suất danh mục với Benchmark qua đường lợi nhuận/tăng trưởng lịch sử.
+- Hiển thị bảng tài sản, biểu đồ phân bổ và ma trận tương quan để hỗ trợ đánh giá mức độ đa dạng hóa.
+- Mô phỏng tình huống khi thêm một mã mới và so sánh danh mục hiện tại với danh mục sau mô phỏng.
+- Tối ưu hóa tỷ trọng theo hai hướng: tối đa hóa Sharpe Ratio hoặc tối thiểu hóa Volatility trong phạm vi ràng buộc.
+- Tạo phần giải thích bằng ngôn ngữ tự nhiên hoặc phân tích hỗ trợ bởi AI để giúp người dùng hiểu kết quả, với nhãn rõ ràng rằng đây là phân tích lịch sử, không phải lời khuyên mua/bán.
 
 ## Cách mở hoặc chạy sản phẩm
 
@@ -162,7 +162,7 @@ APP_URL=http://localhost:3000
 
 Thay `your_gemini_api_key_here` bằng Gemini API key của bạn.
 
-Nếu bạn chưa có Gemini API key, app vẫn có thể chạy các phần phân tích danh mục chính. Phần AI analysis có thể không hoạt động cho đến khi bạn thêm key.
+Nếu bạn chưa có Gemini API key, ứng dụng vẫn có thể chạy các phần phân tích danh mục chính. Phần phân tích AI có thể không hoạt động cho đến khi bạn thêm key.
 
 Lưu ý quan trọng:
 
@@ -220,16 +220,16 @@ http://localhost:3000
 
 ### Demo flow gợi ý
 
-1. Mở trang Home để xem giới thiệu FinFolio.
+1. Mở trang `Trang chủ` để xem giới thiệu FinFolio.
 2. Vào tab `Nhập danh mục`.
 3. Dùng dữ liệu mẫu:
    - `FPT.VN`: 500 cổ phiếu
    - `HPG.VN`: 1000 cổ phiếu
    - Benchmark: `VNM`
-   - Start date: `2023-05-12`
-   - End date: ngày hiện tại hoặc ngày demo
+   - Ngày bắt đầu: `2023-05-12`
+   - Ngày kết thúc: ngày hiện tại hoặc ngày demo
 4. Bấm `Phân tích ngay`.
-5. Xem Dashboard: metric cards, performance chart, benchmark comparison, asset table và correlation matrix.
+5. Xem bảng điều khiển: thẻ chỉ số, biểu đồ hiệu suất, so sánh Benchmark, bảng tài sản và ma trận tương quan.
 6. Vào tab `Mô phỏng tài sản`, thử thêm:
    - `MWG.VN`: 100 cổ phiếu
 7. Xem tỷ trọng dự kiến mới của từng cổ phiếu trong danh mục sau khi thêm mã.
@@ -304,7 +304,7 @@ Trước khi lên Render, cần đảm bảo:
 
 1. Code đã được đưa lên GitHub.
 2. File `.env.local` không được commit lên GitHub.
-3. Bạn đã có Gemini API key nếu muốn dùng phần AI analysis.
+3. Bạn đã có Gemini API key nếu muốn dùng phần phân tích AI.
 4. Project chạy được ở máy bằng:
 
 ```bash
@@ -319,13 +319,13 @@ npm run dev
 https://render.com/
 ```
 
-2. Bấm `Get Started` hoặc `Sign Up`.
+2. Bấm `Get Started` hoặc `Sign Up` trên trang Render.
 3. Đăng nhập bằng GitHub để Render có thể đọc repo của bạn.
 4. Nếu Render hỏi quyền truy cập GitHub, cho phép Render truy cập repo chứa project.
 
 ### 3. Tạo Web Service mới
 
-Trong Render Dashboard:
+Trong bảng điều khiển Render:
 
 1. Bấm `New`.
 2. Chọn `Web Service`.
@@ -428,7 +428,7 @@ npm run start
 
 Project này đã được cấu hình để đọc port từ `process.env.PORT`, nên Render có thể tự cấp port khi chạy.
 
-#### Lỗi AI analysis không hoạt động
+#### Lỗi phân tích AI không hoạt động
 
 Kiểm tra trong Render `Environment` đã có biến:
 
@@ -448,8 +448,8 @@ Sau khi sửa key, bấm `Save, rebuild, and deploy`.
 
 App dùng nguồn dữ liệu bên ngoài như Yahoo Finance. Nếu một mã không có dữ liệu hoặc nguồn bên ngoài tạm lỗi, hãy thử:
 
-- Kiểm tra lại ticker.
-- Dùng ticker có hậu tố `.VN`, ví dụ `FPT.VN`, `HPG.VN`, `MWG.VN`.
+- Kiểm tra lại mã giao dịch.
+- Dùng mã giao dịch có hậu tố `.VN`, ví dụ `FPT.VN`, `HPG.VN`, `MWG.VN`.
 - Thử lại sau vài phút.
 
 ## Link demo nếu có
@@ -459,13 +459,13 @@ App dùng nguồn dữ liệu bên ngoài như Yahoo Finance. Nếu một mã kh
 
 ## Ghi chú về dữ liệu nếu có
 
-Sản phẩm sử dụng dữ liệu giá lịch sử công khai qua các nguồn API như Yahoo Finance hoặc nguồn thị trường tương đương trong phạm vi demo. Với mã chứng khoán Việt Nam, nhóm có chuẩn hóa ticker bằng hậu tố như `.VN` và có định hướng chuẩn bị CSV/dataset mẫu để tránh lỗi khi API không trả đủ dữ liệu. Dữ liệu dùng cho demo chỉ phục vụ phân tích lịch sử, không phải dữ liệu riêng tư của người dùng và không dùng để đảm bảo kết quả tương lai.
+Sản phẩm sử dụng dữ liệu giá lịch sử công khai qua các nguồn API như Yahoo Finance hoặc nguồn thị trường tương đương trong phạm vi demo. Với mã chứng khoán Việt Nam, nhóm có chuẩn hóa mã bằng hậu tố như `.VN` và có định hướng chuẩn bị CSV/dataset mẫu để tránh lỗi khi API không trả đủ dữ liệu. Dữ liệu dùng cho demo chỉ phục vụ phân tích lịch sử, không phải dữ liệu riêng tư của người dùng và không dùng để đảm bảo kết quả tương lai.
 
-Không đưa API key, mật khẩu, token, dữ liệu cá nhân hoặc dữ liệu riêng tư lên GitHub. Nếu cần chạy AI analysis, tạo `.env.local` ở máy local và giữ file này ngoài repo.
+Không đưa API key, mật khẩu, token, dữ liệu cá nhân hoặc dữ liệu riêng tư lên GitHub. Nếu cần chạy phần phân tích AI, tạo `.env.local` ở máy local và giữ file này ngoài repo.
 
 ## Ghi chú thêm
 
 - Repo chính thức của nhóm: `https://github.com/FTU-Legacy-62/G09`.
-- Sản phẩm chính là web app/prototype trong repo, không phải slide thuyết trình.
-- File `GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, input, logic xử lý, user flow, output, lựa chọn thiết kế, hạn chế và bài học của nhóm.
+- Sản phẩm chính là ứng dụng web bản mẫu trong repo, không phải slide thuyết trình.
+- File `GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, dữ liệu đầu vào, logic xử lý, luồng người dùng, kết quả đầu ra, lựa chọn thiết kế, hạn chế và bài học của nhóm.
 - File `INDIVIDUAL_FOOTPRINT.md` cần ghi rõ đóng góp riêng của từng thành viên và bằng chứng liên quan.

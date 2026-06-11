@@ -38,9 +38,9 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
   const [priceCache, setPriceCache] = useState<Record<string, { price: number; currency: string; loading?: boolean; error?: boolean }>>({});
 
   const benchmarks = [
-    { label: 'VN-Index (VNM Proxy)', value: 'VNM' },
+    { label: 'VN-Index (đại diện VNM)', value: 'VNM' },
     { label: 'S&P 500 ETF (SPY)', value: 'SPY' },
-    { label: 'MSCI Emerging Markets (EEM)', value: 'EEM' },
+    { label: 'MSCI thị trường mới nổi (EEM)', value: 'EEM' },
   ];
 
   const isVNStock = (ticker: string) => {
@@ -273,7 +273,7 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
     }
 
     if (!benchmark.trim()) {
-      setLocalError("Vui lòng nhập benchmark.");
+      setLocalError("Vui lòng nhập Benchmark.");
       return;
     }
 
@@ -323,7 +323,7 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
                   <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1 sm:hidden">Mã cổ phiếu</label>
                   <input
                     type="text"
-                    placeholder="Ticker (e.g. FPT)"
+                    placeholder="Mã cổ phiếu (ví dụ: FPT)"
                     className="w-full bg-transparent text-slate-900 placeholder:text-slate-300 focus:outline-none font-bold uppercase tracking-tight text-sm"
                     value={item.ticker}
                     onChange={(e) => handleChange(index, 'ticker', e.target.value)}
@@ -416,7 +416,7 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
             </div>
             <div className="space-y-2 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
               <span className="font-semibold text-slate-900 block">📌 Cổ phiếu Quốc tế:</span>
-              <span>Ứng dụng hỗ trợ đầy đủ mã cổ phiếu toàn cầu từ Yahoo Finance. Nhập trực tiếp mã ticker của cổ phiếu Mỹ (VD: <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">AAPL</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">MSFT</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">TSLA</span>). Bạn hoàn toàn có thể <strong>trộn lẫn cổ phiếu Việt Nam và Quốc tế</strong> trong cùng một danh mục để tối ưu hóa hiệu quả phân bổ tài sản!</span>
+              <span>Ứng dụng hỗ trợ đầy đủ mã cổ phiếu toàn cầu từ Yahoo Finance. Nhập trực tiếp mã giao dịch của cổ phiếu Mỹ (VD: <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">AAPL</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">MSFT</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">TSLA</span>). Bạn hoàn toàn có thể <strong>trộn lẫn cổ phiếu Việt Nam và Quốc tế</strong> trong cùng một danh mục để tối ưu hóa hiệu quả phân bổ tài sản!</span>
             </div>
           </div>
         </div>
@@ -425,14 +425,14 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-slate-100">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block font-sans">Benchmark đối chiếu</label>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block font-sans">Chỉ số đối chiếu (Benchmark)</label>
             <button
               type="button"
               onClick={() => {
                 setIsCustomBenchmark(false);
                 setBenchmark(recommendedVal);
               }}
-              title="Đề xuất benchmark phù hợp tự động dựa theo phân bổ tài sản hiện tại của danh mục"
+              title="Đề xuất Benchmark phù hợp tự động dựa theo phân bổ tài sản hiện tại của danh mục"
               className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all shadow-sm ${
                 isCurrentlyRecommended 
                   ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
@@ -467,7 +467,7 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
           {isCustomBenchmark && (
             <input
               type="text"
-              placeholder="Yahoo Finance ticker..."
+              placeholder="Mã trên Yahoo Finance..."
               className="w-full px-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:outline-none focus:border-indigo-400 font-mono text-sm uppercase"
               value={benchmark}
               onChange={(e) => setBenchmark(e.target.value)}

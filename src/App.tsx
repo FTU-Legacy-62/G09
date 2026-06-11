@@ -148,9 +148,9 @@ export default function App() {
   const [globalError, setGlobalError] = useState<string | null>(null);
 
   const benchmarks = [
-    { label: 'VN-Index (VNM Proxy)', value: 'VNM' },
+    { label: 'VN-Index (đại diện VNM)', value: 'VNM' },
     { label: 'S&P 500 ETF (SPY)', value: 'SPY' },
-    { label: 'MSCI Emerging Markets (EEM)', value: 'EEM' },
+    { label: 'MSCI thị trường mới nổi (EEM)', value: 'EEM' },
   ];
 
   const getBenchmarkLabel = (val: string) => {
@@ -339,7 +339,7 @@ export default function App() {
         currency: quote.currency || fallbackCurrency
       };
     } catch (error) {
-      console.error(`Failed to fetch price for ${ticker}`, error);
+      console.error(`Lỗi khi lấy giá cho ${ticker}`, error);
       return {
         price: fallbackPrice,
         currency: fallbackCurrency
@@ -713,7 +713,7 @@ export default function App() {
           </div>
           <div className="flex flex-col">
             <span className="font-serif font-bold text-xl tracking-tight text-slate-800">FinFolio</span>
-            <span className="text-[10px] tracking-widest uppercase font-bold text-indigo-700">Group 9 Portfolio</span>
+            <span className="text-[10px] tracking-widest uppercase font-bold text-indigo-700">Nhóm 9 - Danh mục đầu tư</span>
           </div>
         </div>
         
@@ -764,7 +764,7 @@ export default function App() {
                       Trang web phân tích, đánh giá và tối ưu danh mục đầu tư cá nhân chuyên sâu
                     </p>
                     <div className="text-slate-500 leading-relaxed text-xs sm:text-sm">
-                      Công cụ hỗ trợ bạn theo dõi hiệu suất đầu tư lịch sử, phân tích rủi ro biến động, thực nghiệm bộ kiểm định độc lập trong & ngoài mẫu (In/Out-of-sample) và tìm kiếm tỷ trọng phân bổ vốn lý tưởng nhất dựa trên kinh tế lượng tài chính hiện đại.
+                      Công cụ hỗ trợ bạn theo dõi hiệu suất đầu tư lịch sử, phân tích rủi ro biến động, kiểm định độc lập trong mẫu và ngoài mẫu (In-Sample/Out-of-Sample), đồng thời tìm kiếm tỷ trọng phân bổ vốn phù hợp dựa trên kinh tế lượng tài chính hiện đại.
                     </div>
                     <div className="pt-2">
                       <button 
@@ -779,7 +779,7 @@ export default function App() {
                     <div className="relative w-48 h-48 rounded-full bg-indigo-50/50 flex items-center justify-center p-4">
                       <img 
                         src={finfolioWelcomeHero} 
-                        alt="FinFolio Mascot" 
+                        alt="Linh vật FinFolio"
                         className="w-full h-full object-contain rounded-full"
                         referrerPolicy="no-referrer"
                       />
@@ -862,8 +862,8 @@ export default function App() {
                className="p-12 space-y-12"
             >
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold text-slate-900">Dashboard Phân Tích Danh Mục</h2>
-                <p className="text-slate-500">Dữ liệu từ quá khứ ({data.portfolioMetrics?.years?.toFixed(1) || '---'} năm) so với benchmark: <span className="font-bold text-slate-700">{getBenchmarkLabel(benchmark)}</span></p>
+                <h2 className="text-3xl font-bold text-slate-900">Bảng điều khiển phân tích danh mục</h2>
+                <p className="text-slate-500">Dữ liệu từ quá khứ ({data.portfolioMetrics?.years?.toFixed(1) || '---'} năm) so với Benchmark: <span className="font-bold text-slate-700">{getBenchmarkLabel(benchmark)}</span></p>
                 {benchmark === 'E1VFVN30.VN' && startDate === '2025-01-15' && (
                   <div className="p-4 bg-amber-50 border border-amber-200/50 rounded-2xl text-amber-800 text-xs font-bold leading-relaxed shadow-sm flex items-center gap-2.5 animate-fadeIn mt-2">
                     <span className="text-sm shrink-0">⚠️</span>
@@ -1017,7 +1017,7 @@ export default function App() {
                     value={formatPercent(data.portfolioMetrics?.trackingError)} 
                     message={`Benchmark: 0.00%`}
                     status="neutral"
-                    description="Mức độ sai lệch giữa lợi nhuận danh mục và benchmark. Càng thấp nghĩa là càng bám sát chỉ số tham chiếu."
+                    description="Mức độ sai lệch giữa lợi nhuận danh mục và Benchmark. Càng thấp nghĩa là càng bám sát chỉ số tham chiếu."
                  />
                  <MetricCard 
                     title="Information Ratio" 
@@ -1028,7 +1028,7 @@ export default function App() {
                  />
               </div>
 
-              {/* 📊 So sánh In-Sample vs Out-of-Sample (2.1) */}
+              {/* So sánh In-Sample và Out-of-Sample */}
               {(() => {
                 const getMonthDuration = (s: string, e: string): number => {
                   const d1 = new Date(s);
@@ -1044,7 +1044,7 @@ export default function App() {
                         <span className="p-1 px-1.5 bg-rose-200/60 text-rose-800 rounded font-bold text-[9px] uppercase tracking-wider shrink-0 mt-0.5">LƯU Ý MẪU NGẮN</span>
                         <div>
                           <p className="font-bold text-rose-950 mb-0.5">Khoảng thời gian backtest quá ngắn ({monthsCount.toFixed(1)} tháng)!</p>
-                          <p>Tổng khoảng thời gian backtest ít hơn 9 tháng. Việc tách chu kỳ và kiểm thử Out-of-Sample (OOS) có thể thiếu độ tin cậy thống kê và dễ gặp hiện tượng quá khớp (overfitting) dữ liệu ngắn hạn.</p>
+                          <p>Tổng khoảng thời gian backtest ít hơn 9 tháng. Việc tách chu kỳ và kiểm thử ngoài mẫu (Out-of-Sample - OOS) có thể thiếu độ tin cậy thống kê và dễ gặp hiện tượng quá khớp (overfitting) dữ liệu ngắn hạn.</p>
                         </div>
                       </div>
                     )}
@@ -1053,7 +1053,7 @@ export default function App() {
                       <div className="bg-gradient-to-br from-indigo-50/30 to-slate-50/50 border border-slate-200/60 rounded-3xl p-8 space-y-6">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                           <div>
-                            <h3 className="text-xl font-bold text-slate-900 tracking-tight">Kiểm Thử Hai Mẫu Độc Lập (In-Sample & Out-of-Sample)</h3>
+                            <h3 className="text-xl font-bold text-slate-900 tracking-tight">Kiểm thử hai mẫu độc lập (In-Sample và Out-of-Sample)</h3>
                             <p className="text-xs text-slate-500 mt-1">
                               Mốc ranh giới phân tách (lùi về 6 tháng cuối): <span className="font-bold text-indigo-600 underline">{data.boundaryDate || 'Không xác định'}</span>
                             </p>
@@ -1061,11 +1061,11 @@ export default function App() {
                           <div className="flex flex-wrap items-center gap-2">
                             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-xl border border-indigo-100 text-[11px] font-bold">
                               <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
-                              In-Sample (IS - Trước ranh giới)
+                              Trong mẫu (In-Sample - IS)
                             </span>
                             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-xl border border-amber-100 text-[11px] font-bold">
                               <span className="w-2 h-2 rounded-full bg-amber-600"></span>
-                              Out-of-Sample (OOS - 6 tháng cuối)
+                              Ngoài mẫu (Out-of-Sample - OOS)
                             </span>
                           </div>
                         </div>
@@ -1076,7 +1076,7 @@ export default function App() {
                             <div className="flex justify-between items-center pb-3 border-b border-indigo-100/60">
                               <span className="font-bold text-indigo-950 text-sm flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 animate-pulse"></span>
-                                🎯 In-Sample (Trong Mẫu - IS)
+                                Trong mẫu (In-Sample - IS)
                               </span>
                               <span className="text-[10px] bg-indigo-100 text-indigo-700 px-2.5 py-0.5 rounded-full font-bold">
                                 Dữ liệu tối ưu hóa
@@ -1086,17 +1086,17 @@ export default function App() {
                               <div className="p-3 bg-white border border-indigo-100/50 rounded-xl text-center shadow-xs">
                                 <span className="text-[10px] text-indigo-600 font-bold block mb-1">CAGR IS</span>
                                 <span className="text-base font-black text-indigo-950">{formatPercent(data.inSampleMetrics.cagr)}</span>
-                                <span className="text-[9px] text-indigo-400 block mt-1 font-medium">Bench: {formatPercent(data.inSampleBenchmarkMetrics?.cagr || 0)}</span>
+                                <span className="text-[9px] text-indigo-400 block mt-1 font-medium">Benchmark: {formatPercent(data.inSampleBenchmarkMetrics?.cagr || 0)}</span>
                               </div>
                               <div className="p-3 bg-white border border-indigo-100/50 rounded-xl text-center shadow-xs">
                                 <span className="text-[10px] text-indigo-600 font-bold block mb-1">VOL IS</span>
                                 <span className="text-base font-black text-indigo-950">{formatPercent(data.inSampleMetrics.volatility)}</span>
-                                <span className="text-[9px] text-indigo-400 block mt-1 font-medium">Bench: {formatPercent(data.inSampleBenchmarkMetrics?.volatility || 0)}</span>
+                                <span className="text-[9px] text-indigo-400 block mt-1 font-medium">Benchmark: {formatPercent(data.inSampleBenchmarkMetrics?.volatility || 0)}</span>
                               </div>
                               <div className="p-3 bg-white border border-indigo-100/50 rounded-xl text-center shadow-xs">
                                 <span className="text-[10px] text-indigo-600 font-bold block mb-1">SHARPE IS</span>
                                 <span className="text-base font-black text-indigo-950 font-mono">{formatNum(data.inSampleMetrics.sharpe)}</span>
-                                <span className="text-[9px] text-indigo-400 block mt-1 font-medium">Bench: {formatNum(data.inSampleBenchmarkMetrics?.sharpe || 0)}</span>
+                                <span className="text-[9px] text-indigo-400 block mt-1 font-medium">Benchmark: {formatNum(data.inSampleBenchmarkMetrics?.sharpe || 0)}</span>
                               </div>
                             </div>
                           </div>
@@ -1106,7 +1106,7 @@ export default function App() {
                             <div className="flex justify-between items-center pb-3 border-b border-amber-200/60">
                               <span className="font-bold text-amber-950 text-sm flex items-center gap-2">
                                 <span className="w-2.5 h-2.5 rounded-full bg-amber-600 animate-pulse"></span>
-                                🧪 Out-of-Sample (Ngoài Mẫu - OS)
+                                Ngoài mẫu (Out-of-Sample - OOS)
                               </span>
                               <span className="text-[10px] bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full font-bold animate-pulse">
                                 Thực nghiệm độc lập
@@ -1116,25 +1116,25 @@ export default function App() {
                               <div className="p-3 bg-white border border-amber-200/50 rounded-xl text-center shadow-xs">
                                 <span className="text-[10px] text-amber-700 font-bold block mb-1">CAGR OOS</span>
                                 <span className="text-base font-black text-amber-950">{formatPercent(data.outOfSampleMetrics.cagr)}</span>
-                                <span className="text-[9px] text-amber-500/80 block mt-1 font-medium">Bench: {formatPercent(data.outOfSampleBenchmarkMetrics?.cagr || 0)}</span>
+                                <span className="text-[9px] text-amber-500/80 block mt-1 font-medium">Benchmark: {formatPercent(data.outOfSampleBenchmarkMetrics?.cagr || 0)}</span>
                               </div>
                               <div className="p-3 bg-white border border-amber-200/50 rounded-xl text-center shadow-xs">
                                 <span className="text-[10px] text-amber-700 font-bold block mb-1">VOL OOS</span>
                                 <span className="text-base font-black text-amber-950">{formatPercent(data.outOfSampleMetrics.volatility)}</span>
-                                <span className="text-[9px] text-amber-500/80 block mt-1 font-medium">Bench: {formatPercent(data.outOfSampleBenchmarkMetrics?.volatility || 0)}</span>
+                                <span className="text-[9px] text-amber-500/80 block mt-1 font-medium">Benchmark: {formatPercent(data.outOfSampleBenchmarkMetrics?.volatility || 0)}</span>
                               </div>
                               <div className="p-3 bg-white border border-amber-200/50 rounded-xl text-center shadow-xs">
                                 <span className="text-[10px] text-amber-700 font-bold block mb-1">SHARPE OOS</span>
                                 <span className="text-base font-black text-amber-950 font-mono">{formatNum(data.outOfSampleMetrics.sharpe)}</span>
-                                <span className="text-[9px] text-amber-500/80 block mt-1 font-medium">Bench: {formatNum(data.outOfSampleBenchmarkMetrics?.sharpe || 0)}</span>
+                                <span className="text-[9px] text-amber-500/80 block mt-1 font-medium">Benchmark: {formatNum(data.outOfSampleBenchmarkMetrics?.sharpe || 0)}</span>
                               </div>
                             </div>
                           </div>
                         </div>
 
-                        {/* Overfitting analysis notes */}
+                        {/* Ghi chú phân tích overfitting */}
                         <div className="text-[11px] text-slate-500 leading-relaxed bg-white/50 border border-slate-200/40 p-4 rounded-xl">
-                          💡 <strong>Phân tích Overfitting (Quá khớp):</strong> Nếu kết quả hiệu suất trong mẫu (In-Sample Sharpe đạt {formatNum(data.inSampleMetrics.sharpe)}) vượt xa đáng kể so với hiệu suất ngoài mẫu (Out-of-Sample Sharpe đạt {formatNum(data.outOfSampleMetrics.sharpe)}), danh mục có thể đang bị tối ưu quá đà trên dữ liệu quá khứ và khó duy trì kết quả sinh lời thực tế trong tương lai.
+                          <strong>Phân tích quá khớp (Overfitting):</strong> Nếu kết quả hiệu suất trong mẫu (In-Sample Sharpe đạt {formatNum(data.inSampleMetrics.sharpe)}) vượt xa đáng kể so với hiệu suất ngoài mẫu (Out-of-Sample Sharpe đạt {formatNum(data.outOfSampleMetrics.sharpe)}), danh mục có thể đang bị tối ưu quá đà trên dữ liệu quá khứ và khó duy trì kết quả sinh lời thực tế trong tương lai.
                         </div>
                       </div>
                     )}
@@ -1280,7 +1280,7 @@ export default function App() {
                 <div className="flex items-center gap-2">
                   <p className="text-slate-500">Phân tích và nhận xét chi tiết hiệu quả danh mục của bạn bằng ngôn ngữ dễ hiểu.</p>
                   {isAiAnalysing && <div className="flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-bold animate-pulse">
-                    <BrainCircuit size={12} /> AI Đang phân tích...
+                    <BrainCircuit size={12} /> AI đang phân tích...
                   </div>}
                 </div>
               </div>
@@ -1303,8 +1303,8 @@ export default function App() {
                             <Bot size={24} className="text-indigo-300" />
                          </div>
                          <div>
-                            <h3 className="text-xl font-bold">Cố vấn AI Phân tích</h3>
-                            <p className="text-indigo-300 text-xs font-medium uppercase tracking-widest">Phân tích chuyên sâu bởi Gemini AI</p>
+                            <h3 className="text-xl font-bold">Cố vấn phân tích AI</h3>
+                            <p className="text-indigo-300 text-xs font-medium uppercase tracking-widest">Phân tích chuyên sâu bằng Gemini AI</p>
                          </div>
                       </div>
                       
@@ -1669,11 +1669,11 @@ export default function App() {
                     <div className="flex gap-4 text-xs font-bold font-sans">
                        <div className="flex items-center gap-2">
                          <div className="w-3 h-1 rounded-full" style={{ backgroundColor: '#cc7871' }}></div>
-                         <span>Hiện tại (Original)</span>
+                         <span>Danh mục hiện tại</span>
                        </div>
                        <div className="flex items-center gap-2">
                          <div className="w-3 h-1 rounded-full" style={{ backgroundColor: '#718a6e' }}></div>
-                         <span>Sau khi thêm mã (Simulated)</span>
+                         <span>Danh mục sau mô phỏng</span>
                        </div>
                     </div>
                   </div>
@@ -1701,7 +1701,7 @@ export default function App() {
                           contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                           formatter={(v: number, name: string) => [
                             `${v.toFixed(2)}%`, 
-                            name === 'portfolio' ? `Sau khi thêm mã` : 'Hiện tại (Original)'
+                            name === 'portfolio' ? `Danh mục sau mô phỏng` : 'Danh mục hiện tại'
                           ]}
                         />
                         <Area type="monotone" dataKey="original" stroke="#cc7871" fillOpacity={1} fill="url(#colorOrig)" strokeWidth={2} dot={false} strokeDasharray="5 5" />
@@ -1719,7 +1719,7 @@ export default function App() {
                         status: data.portfolioMetrics.cumulativeReturn >= preSimData.portfolioMetrics.cumulativeReturn ? 'better' : 'worse' 
                       },
                       { 
-                        label: 'Volatility (%)', 
+                        label: 'Biến động (Volatility) (%)',
                         before: preSimData.portfolioMetrics.volatility * 100, 
                         after: data.portfolioMetrics.volatility * 100, 
                         status: data.portfolioMetrics.volatility <= preSimData.portfolioMetrics.volatility ? 'better' : 'worse' 
@@ -1851,7 +1851,7 @@ export default function App() {
                       }`}
                     >
                        <Activity className={optTarget === 'volatility' ? 'text-indigo-600 mb-4' : 'text-slate-400 mb-4'} size={32} />
-                       <h4 className="font-bold text-slate-900 text-lg">Tối thiểu Volatility</h4>
+                       <h4 className="font-bold text-slate-900 text-lg">Tối thiểu hóa biến động (Volatility)</h4>
                        <p className="text-slate-500 text-sm">Mức độ rủi ro thấp nhất</p>
                        {optTarget === 'volatility' && (
                          <div className="absolute top-4 right-4 w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white">
@@ -1915,7 +1915,7 @@ export default function App() {
                         status: data.portfolioMetrics.cagr >= preOptData.portfolioMetrics.cagr ? 'better' : 'worse' 
                       },
                       { 
-                        label: 'Volatility (%)', 
+                        label: 'Biến động (Volatility) (%)',
                         before: preOptData.portfolioMetrics.volatility * 100, 
                         after: data.portfolioMetrics.volatility * 100, 
                         status: data.portfolioMetrics.volatility <= preOptData.portfolioMetrics.volatility ? 'better' : 'worse' 
@@ -1952,11 +1952,11 @@ export default function App() {
                       <div className="flex gap-4 text-xs font-bold">
                          <div className="flex items-center gap-2">
                            <div className="w-3 h-1 rounded-full" style={{ backgroundColor: '#cc7871' }}></div>
-                           <span>Trước tối ưu (Original)</span>
+                           <span>Trước tối ưu</span>
                          </div>
                          <div className="flex items-center gap-2">
                            <div className="w-3 h-1 rounded-full" style={{ backgroundColor: '#718a6e' }}></div>
-                           <span>Sau tối ưu (Optimized)</span>
+                           <span>Sau tối ưu</span>
                          </div>
                       </div>
                     </div>
