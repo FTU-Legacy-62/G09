@@ -230,11 +230,11 @@ Nhóm dùng meeting minutes theo 7 tuần để ghi lại tiến trình, quyết
 
 | Thành viên | Vai trò chính | Output chính dùng để đối chiếu |
 |---|---|---|
-| Phương | Product Planning + Input/Data Design | Problem statement, target user, MVP boundary, input schema, validation rules, data/API plan, sample data/fallback direction. |
-| Ngọc | Financial Logic + Backend Calculation | Formula checklist, metrics logic, return/risk/benchmark/correlation/optimization logic, thresholds và explanation. |
-| Hưng | UI/UX Design + Dashboard Visualization Plan | Wireframe, dashboard hierarchy, chart/table plan, tooltip direction, user flow từ input đến dashboard/simulation. |
-| An Thái | Frontend Core Pages | Home, Portfolio Input, Dashboard layout, core state, form validation và page navigation. |
-| Hải | Backend/Frontend Integration + Charts + Simulation | `/api/analyze` integration, metric cards, line chart/PnL chart, correlation matrix, what-if comparison table, optimization chart và demo script. |
+| Phạm Minh Phương | Product Planning + Input/Data Design | Problem statement, target user, MVP boundary, input schema, validation rules, data/API plan, sample data/fallback direction. |
+| Hoàng Minh Ngọc | Financial Logic + Backend Calculation | Formula checklist, metrics logic, return/risk/benchmark/correlation/optimization logic, thresholds và explanation. |
+| Nguyễn Trịnh Thái Hưng | UI/UX Design + Dashboard Visualization Plan | Wireframe, dashboard hierarchy, chart/table plan, tooltip direction, user flow từ input đến dashboard/simulation. |
+| Nghiêm An Thái | Frontend Core Pages | Home, Portfolio Input, Dashboard layout, core state, form validation và page navigation. |
+| Bùi Thanh Hải | Backend/Frontend Integration + Charts + Simulation | `/api/analyze` integration, metric cards, line chart/PnL chart, correlation matrix, what-if comparison table, optimization chart và demo script. |
 
 
 ## Điểm nhóm thấy làm tốt
