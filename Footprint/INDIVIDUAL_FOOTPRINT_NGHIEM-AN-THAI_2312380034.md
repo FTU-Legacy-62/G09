@@ -87,13 +87,13 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 |***Tuần***|***Ghi trong meeting minutes***|***Output được ghi nhận***|***Vì sao chứng minh đóng góp cá nhân***|
 | --- | --- | --- | --- |
-| Tuần 1 | An Thái khảo sát khả năng dựng prototype web và luồng cơ bản. | Ghi chú feasibility prototype. | Chứng minh An Thái tham gia từ bước xác định hướng frontend. |
-| Tuần 2 | An Thái tìm công cụ AI web builder và xác định cấu trúc prototype nhiều trang. | Cấu trúc prototype đa trang. | Là tiền đề cho Home/Input/Dashboard/Evaluation/Simulation/Optimization. |
-| Tuần 3 | An Thái dựng prototype UI ban đầu: Home, Portfolio Input, Dashboard, Evaluation, Simulation, Optimization. | Prototype UI nhiều trang. | Đây là evidence trực tiếp cho vai trò Frontend Core Pages. |
-| Tuần 4 | An Thái chuẩn bị demo frontend với Home, Input, Dashboard, validation/loading/error states. | Integrated frontend review. | Chứng minh phần frontend đã đi vào luồng demo giữa kỳ. |
-| Tuần 5 | An Thái sửa form validation, loading/error states, responsive layout và navigation theo feedback Demo 1. | Patched frontend sau feedback. | Chứng minh An Thái chuyển feedback thành chỉnh sửa cụ thể. |
-| Tuần 6 | An Thái dọn route/navigation, state handling, build test và fix lỗi form/loading. | Cleaned frontend + build test. | Giúp app ổn định hơn trước final demo. |
-| Tuần 7 | An Thái sửa lỗi và hoàn thiện web. | Final frontend pages. | Chứng minh đóng góp ở giai đoạn hoàn thiện sản phẩm cuối kỳ. |
+| Tuần 1 | Khảo sát khả năng dựng prototype web và luồng cơ bản. | Ghi chú feasibility prototype. | Tham gia từ bước xác định hướng frontend. |
+| Tuần 2 | Tìm công cụ AI web builder và xác định cấu trúc prototype nhiều trang. | Cấu trúc prototype đa trang. | Là tiền đề cho Home/Input/Dashboard/Evaluation/Simulation/Optimization. |
+| Tuần 3 | Dựng prototype UI ban đầu: Home, Portfolio Input, Dashboard, Evaluation, Simulation, Optimization. | Prototype UI nhiều trang. | Đây là evidence trực tiếp cho vai trò Frontend Core Pages. |
+| Tuần 4 | Chuẩn bị demo frontend với Home, Input, Dashboard, validation/loading/error states. | Integrated frontend review. | Chứng minh phần frontend đã đi vào luồng demo giữa kỳ. |
+| Tuần 5 | Sửa form validation, loading/error states, responsive layout và navigation theo feedback Demo 1. | Patched frontend sau feedback. | Tiếp thu feedback để chỉnh sửa cụ thể. |
+| Tuần 6 | Dọn route/navigation, state handling, build test và fix lỗi form/loading. | Cleaned frontend + build test. | Giúp app ổn định hơn trước final demo. |
+| Tuần 7 | Sửa lỗi và hoàn thiện web. | Final frontend pages. | Chứng minh đóng góp ở giai đoạn hoàn thiện sản phẩm cuối kỳ. |
 
 ***Bằng chứng phụ có thể kiểm tra:***
 
