@@ -459,8 +459,7 @@ App dùng nguồn dữ liệu bên ngoài như Yahoo Finance. Nếu một mã kh
 
 ## Link demo nếu có
 
-- Link demo: Chưa cập nhật.
-- Tài khoản demo nếu có: Không cần tài khoản demo.
+- Link demo: https://finfolio-axub.onrender.com/
 
 ## Ghi chú về dữ liệu nếu có
 
