@@ -1,7 +1,4 @@
 # Group Footprint
-
-Group footprint là phần ghi lại quá trình làm sản phẩm của cả nhóm. File này giúp người đọc hiểu nhóm đã làm sản phẩm như thế nào, sản phẩm hoạt động ra sao, nhóm đã chọn cách làm nào, học được gì và còn hạn chế gì. Footprint không chỉ là danh sách công việc. Trong buổi thi cuối kỳ, giảng viên có thể đối chiếu sản phẩm trong repo với nội dung trong file này.
-
 ## Tên sản phẩm
 
 **FinFolio - Portfolio Insight & Optimizer**
