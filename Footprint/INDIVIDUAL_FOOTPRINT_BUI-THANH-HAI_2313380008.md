@@ -1,13 +1,15 @@
 # Individual Footprint
 
 ## Thành viên 1: Bùi Thanh Hải - 2313380008
-- **Họ tên:** Bùi Thanh Hải
-- **Mã sinh viên:** 2313380008
-- **Dự án:** FinFolio - Portfolio Insight & Optimizer
-- **Môn học:** Technology Applications in Finance and Banking - NHA408E
-- **Nhóm:** Group 9
+|***Thông tin***|***Nội dung***|
+| :- | :- |
+|*Họ tên*|*Bùi Thanh Hải*|
+|*Mã sinh viên*|*2313380008*|
+|*Dự án*|*FinFolio - Portfolio Insight & Optimizer*|
+|*Môn học*|*Technology Applications in Finance and Banking - NHA408E*|
+|Nhóm|Group 9|
 
-### Vai trò trong dự án
+### **Vai trò trong dự án**
 
 **Bạn phụ trách vai trò gì trong dự án?**
 
@@ -19,13 +21,13 @@ Trong dự án FinFolio, tôi phụ trách chính phần lập trình/tích hợ
 - Phát triển/tinh chỉnh phần What-if Simulation và trước-sau Optimization để người dùng thấy tác động khi thay đổi danh mục.
 - Kiểm tra run/build, đóng gói source, chuẩn bị demo script, handoff log và final documentation.
 
-### Dấu ấn cá nhân trong sản phẩm
+### **Dấu ấn cá nhân trong sản phẩm**
 
 **Phần nào trong sản phẩm thể hiện rõ đóng góp của bạn nhất?**
 
 Dấu ấn rõ nhất của tôi là phần dashboard và luồng demo có thể chạy được: người dùng nhập danh mục, hệ thống gọi phân tích, sau đó hiển thị metric cards, biểu đồ performance/PnL, bảng asset metrics, correlation matrix, kết quả what-if, kết quả optimization và phần giải thích AI/rule-based. Phần này thể hiện rõ đóng góp vì nó nối trực tiếp financial logic của Ngọc, input/data plan của Phương và UI của Hưng/An Thái thành sản phẩm cuối cùng.
 
-### Những việc đã thực sự làm
+### **Những việc đã thực sự làm**
 
 - **Việc 1.** Kiểm tra tính khả thi của historical price data, benchmark proxy và hướng API/fallback dữ liệu trong giai đoạn chọn ý tưởng.
 - **Việc 2.** Thiết kế contract dữ liệu cho /api/analyze: tickers, weights, benchmark, date range, risk-free rate và các output cần trả về cho dashboard.
@@ -36,11 +38,11 @@ Dấu ấn rõ nhất của tôi là phần dashboard và luồng demo có thể
 - **Việc 7.** Tích hợp hoặc kiểm tra phần AI/rule-based explanation fallback để demo không phụ thuộc hoàn toàn vào một response AI.
 - **Việc 8.** Đóng gói source, kiểm tra npm run dev/build, chuẩn bị demo script và final handoff log cho tuần cuối.
 
-### File, tính năng, dữ liệu, logic, giao diện, tài liệu hoặc phần demo đã đóng góp
+### **File, tính năng, dữ liệu, logic, giao diện, tài liệu hoặc phần demo đã đóng góp**
 
 Các phần cụ thể có thể đối chiếu trong source package, proposal/pitch deck, progress review và demo:
 
-| Hạng mục | Phần đã đóng góp | Cách kiểm tra |
+| **Hạng mục** | **Phần đã đóng góp** | **Cách kiểm tra** |
 | --- | --- | --- |
 | server.ts | Endpoint /api/analyze, /api/price, /api/optimize; fetch historical data; align dates; calculate/return dashboard-ready data. | Đối chiếu trong source package cuối kỳ. |
 | src/App.tsx | State quản lý portfolio, benchmark, dashboard tabs, handleAnalyze, simulation state, optimization state, AI analysis flow. | Đối chiếu trong source package và demo app. |
@@ -50,7 +52,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 | Optimization display | Hiển thị optimized weights, before/after comparison và diễn giải kết quả như historical simulation. | Đối chiếu bằng tab Optimization và final demo script. |
 | Final documentation/demo | Run guide, demo script, source packaging, handoff log, workflow evidence. | Đối chiếu bằng Meeting Minutes tuần 7 và bộ nộp cuối. |
 
-### Bằng chứng đóng góp
+### **Bằng chứng đóng góp**
 
 **Bằng chứng chính:** `FinFolio_7_Week_Meeting_Minutes.docx`. Meeting minutes là evidence quan trọng nhất vì ghi rõ nhiệm vụ, output, deadline và trạng thái của từng thành viên theo từng tuần.
 
@@ -71,21 +73,21 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 - Midterm Progress Review: Part E ghi Hải phụ trách Frontend Chart + Backend Integration, PnL/performance chart, correlation matrix, result table, what-if simulation comparison và integrated prototype.
 - Ghi chú: nếu không có commit/PR riêng do nhóm làm ngoài GitHub ở giai đoạn đầu, meeting minutes + source package + demo screen là bằng chứng thay thế có thể kiểm tra được.
 
-### Phần đóng góp đó kết nối thế nào với sản phẩm cuối cùng
+### **Phần đóng góp đó kết nối thế nào với sản phẩm cuối cùng**
 
 - Giúp người dùng đi từ input danh mục sang dashboard có kết quả trực quan thay vì chỉ có công thức rời rạc.
 - Giúp financial logic trở thành output có thể đọc: metric cards, chart, bảng, matrix và so sánh benchmark.
 - Giúp phần what-if/optimization trở thành decision-support flow: người dùng thấy trước-sau và hiểu đây là mô phỏng lịch sử.
 - Giúp demo cuối kỳ rõ ràng hơn vì có kịch bản: nhập dữ liệu -> analyze -> dashboard -> simulation -> optimization -> explanation.
 
-### Điều cá nhân học được
+### **Điều cá nhân học được**
 
 - Tôi học được rằng sản phẩm tài chính không chỉ cần công thức đúng mà còn cần dữ liệu được align date, normalize ticker và handle lỗi rõ ràng.
 - Tôi hiểu rõ hơn cách thiết kế API response cho frontend: field phải đủ cho chart/table/card, nếu thiếu sẽ làm UI không thể hiển thị đúng.
 - Tôi học cách biến feedback demo thành task kỹ thuật cụ thể: API error, missing data, before/after table, weight rescale note, run guide.
 - Tôi nhận ra optimization và AI explanation phải có wording cẩn thận để tránh bị hiểu là lời khuyên đầu tư.
 
-### Khó khăn đã gặp và cách xử lý
+### **Khó khăn đã gặp và cách xử lý**
 
 | Khó khăn đã gặp | Cách xử lý |
 | --- | --- |
