@@ -11,7 +11,7 @@
 
 ### **Vai trò trong dự án**
 
-**Bạn phụ trách vai trò gì trong dự án?**
+***Bạn phụ trách vai trò gì trong dự án?***
 
 Trong dự án FinFolio, tôi phụ trách chính phần lập trình/tích hợp giữa backend và frontend, kết nối dữ liệu phân tích danh mục với dashboard, biểu đồ, bảng kết quả, mô phỏng what-if, tối ưu hóa và phần chuẩn bị demo cuối kỳ. Vai trò của tôi nằm ở đoạn biến dữ liệu và logic tài chính thành phần sản phẩm có thể thao tác được.
 
@@ -23,7 +23,7 @@ Trong dự án FinFolio, tôi phụ trách chính phần lập trình/tích hợ
 
 ### **Dấu ấn cá nhân trong sản phẩm**
 
-**Phần nào trong sản phẩm thể hiện rõ đóng góp của bạn nhất?**
+***Phần nào trong sản phẩm thể hiện rõ đóng góp của bạn nhất?***
 
 Dấu ấn rõ nhất của tôi là phần dashboard và luồng demo có thể chạy được: người dùng nhập danh mục, hệ thống gọi phân tích, sau đó hiển thị metric cards, biểu đồ performance/PnL, bảng asset metrics, correlation matrix, kết quả what-if, kết quả optimization và phần giải thích AI/rule-based. Phần này thể hiện rõ đóng góp vì nó nối trực tiếp financial logic của Ngọc, input/data plan của Phương và UI của Hưng/An Thái thành sản phẩm cuối cùng.
 
@@ -54,7 +54,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 ### **Bằng chứng đóng góp**
 
-**Bằng chứng chính:** `FinFolio_7_Week_Meeting_Minutes.docx`. Meeting minutes là evidence quan trọng nhất vì ghi rõ nhiệm vụ, output, deadline và trạng thái của từng thành viên theo từng tuần.
+***Bằng chứng chính:*** `FinFolio_7_Week_Meeting_Minutes.docx`. Meeting minutes là evidence quan trọng nhất vì ghi rõ nhiệm vụ, output, deadline và trạng thái của từng thành viên theo từng tuần.
 
 |***Tuần***|***Ghi trong meeting minutes***|***Output được ghi nhận***|***Vì sao chứng minh đóng góp cá nhân***|
 | --- | --- | --- | --- |
@@ -66,7 +66,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 | Tuần 6 | Hải tối ưu API/fetch flow, before-after optimization chart, simulation result table, Gemini/rule-based AI explanation fallback và run instructions. | Stable integrated prototype + run guide. | Giúp prototype ổn định hơn và giảm rủi ro demo lỗi. |
 | Tuần 7 | Hải đóng gói source, kiểm tra npm run dev/build, demo /api/analyze, charts, simulation, optimization, AI explanation và final documentation. | Source package + final demo script + handoff log. | Chứng minh đóng góp ở giai đoạn hoàn thiện nộp bài và demo cuối kỳ. |
 
-**Bằng chứng phụ có thể kiểm tra:**
+***Bằng chứng phụ có thể kiểm tra:***
 
 - Source package: portfolio-insight-&-optimizer FINAL.zip, đặc biệt các file server.ts, src/App.tsx, src/types.ts, src/components/MetricCard.tsx.
 - Pitch Deck/Proposal: các phần Portfolio Dashboard, Portfolio Simulation, Portfolio Optimization và Post-Simulation AI Analysis thể hiện output do phần integration/chart/simulation tạo ra.
@@ -89,13 +89,13 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 ### **Khó khăn đã gặp và cách xử lý**
 
-|**Khó khăn đã gặp**|**Cách xử lý**|
+|***Khó khăn đã gặp***|***Cách xử lý***|
 | --- | --- |
 | Dữ liệu lịch sử và ticker có thể lỗi hoặc không đồng nhất. | Thiết kế normalize ticker, kiểm tra benchmark proxy, thêm hướng fallback và error message rõ hơn. |
 | Frontend cần đúng field từ backend để render chart/table. | Chốt /api/analyze schema ở tuần 3 và kiểm tra lại trong tuần 4-6 khi tích hợp. |
 | What-if/optimization dễ bị hiểu nhầm là khuyến nghị đầu tư. | Thêm before/after comparison, note về rescale weight và disclaimer “historical simulation only”. |
 | Demo có rủi ro lỗi nếu API hoặc AI response chậm. | Chuẩn bị run instructions, kiểm tra npm run dev/build và có Gemini/rule-based explanation fallback. |
 
-### Lời nhắn cho sinh viên khóa sau
+### **Lời nhắn cho sinh viên khóa sau**
 
 Nếu khóa sau tiếp tục phần này, nên chốt API schema thật sớm, viết sample response trước khi code UI, chuẩn bị CSV/sample data fallback và luôn kiểm thử bằng vài bộ portfolio khác nhau. Với sản phẩm tài chính, đừng chỉ cố làm nhiều metric; hãy ưu tiên dữ liệu ổn định, giải thích rõ và disclaimer đúng chỗ.
