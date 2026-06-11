@@ -16,7 +16,7 @@ G09
 
 ## Mô tả ngắn về sản phẩm
 
-link: https://finfolio-axub.onrender.com/
+Link Demo: https://finfolio-axub.onrender.com/
 
 FinFolio là bản mẫu web hỗ trợ người dùng phân tích danh mục đầu tư cá nhân. Người dùng nhập mã tài sản, số lượng cổ phiếu, Benchmark và khoảng thời gian phân tích; hệ thống tự lấy giá, quy đổi thành giá trị danh mục, tính tỷ trọng và xử lý dữ liệu giá lịch sử để tạo bảng điều khiển về lợi nhuận, rủi ro, tương quan, so sánh Benchmark và mô phỏng thay đổi danh mục. Sản phẩm hướng tới mục tiêu học tập và chuẩn bị quyết định đầu tư, không phải nền tảng giao dịch thật. FinFolio không thực hiện mua/bán và không đưa ra khuyến nghị đầu tư được bảo đảm.
 
