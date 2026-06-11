@@ -1,6 +1,6 @@
-# Individual Footprint - Hải
+# Individual Footprint
 
-## Thành viên 1: Hải - 2313380008
+## Thành viên 1: Bùi Thanh Hải - 2313380008
 - **Họ tên:** Bùi Thanh Hải
 - **Mã sinh viên:** 2313380008
 - **Dự án:** FinFolio - Portfolio Insight & Optimizer
