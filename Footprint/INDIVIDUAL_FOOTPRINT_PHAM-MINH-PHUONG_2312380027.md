@@ -13,7 +13,7 @@ Trong dự án FinFolio - Portfolio Insight & Optimizer, em phụ trách phần 
 
 Từ vấn đề đó, em định hình FinFolio là một công cụ web hỗ trợ phân tích danh mục dựa trên dữ liệu lịch sử, không phải nền tảng giao dịch và không đưa ra khuyến nghị mua/bán trực tiếp. Sản phẩm tập trung vào return, risk, benchmark comparison, diversification, simulation và optimization.
 
-Em cũng xây dựng PRD, MVP scope, customer journey và input schema gồm ticker, tỷ trọng, benchmark, khoảng thời gian phân tích và risk-free rate. Ngoài ra, em tham gia định hình optimization flow, trong đó người dùng có thể chọn Maximize Sharpe Ratio hoặc Minimize Volatility, sau đó hệ thống trả về optimized weights, optimized metrics và re-analysis.
+Em cũng xây dựng PRD, MVP scope, customer journey và input schema gồm ticker, số lượng cổ phiếu, benchmark, khoảng thời gian phân tích và risk-free rate. Ở bản cuối, tỷ trọng danh mục được hệ thống tự tính từ số lượng cổ phiếu và giá hiện tại. Ngoài ra, em tham gia định hình optimization flow, trong đó người dùng có thể chọn Maximize Sharpe Ratio hoặc Minimize Volatility, sau đó hệ thống trả về optimized weights, optimized metrics và re-analysis.
 
 ## 2. Dấu ấn cá nhân trong sản phẩm
 
@@ -58,13 +58,13 @@ Luồng này giúp sản phẩm có logic rõ ràng: người dùng nhập danh 
 Em thiết kế các input chính gồm:
 
 - Ticker list: danh sách mã tài sản.
-- Portfolio weights: tỷ trọng từng mã.
+- Shares: số lượng cổ phiếu/tài sản từng mã; hệ thống dùng giá hiện tại để suy ra tỷ trọng danh mục.
 - Benchmark: chỉ số hoặc tài sản tham chiếu.
 - Start date và end date: khoảng thời gian phân tích.
 - Risk-free rate: dùng cho các chỉ số risk-adjusted return.
 - Optimization inputs: mục tiêu tối ưu và giới hạn tỷ trọng min/max.
 
-Các validation rules gồm: ticker không được để trống, tỷ trọng phải hợp lệ, tổng tỷ trọng bằng 100%, benchmark hợp lệ, date range đủ dài và risk-free rate có default value.
+Các validation rules gồm: ticker không được để trống, số lượng cổ phiếu phải hợp lệ, benchmark hợp lệ, date range đủ dài và risk-free rate có default value. Tỷ trọng được hệ thống tính lại từ giá trị vị thế, nên người dùng không cần tự nhập tổng tỷ trọng bằng 100%.
 
 ### 3.6. Định hướng benchmark và data source
 
@@ -86,7 +86,7 @@ Các phần em đã đóng góp gồm:
 - Product proposition của FinFolio.
 - PRD và MVP boundary.
 - Customer journey.
-- Input schema: ticker, weight, benchmark, start/end date, risk-free rate.
+- Input schema: ticker, shares, benchmark, start/end date, risk-free rate.
 - Validation rules.
 - Benchmark options và data direction.
 - Optimization flow: objective, constraints, optimized weights, optimized metrics và re-analysis.
@@ -114,7 +114,7 @@ Cụ thể, phần việc của em giúp xác định FinFolio giải quyết v�
 
 Qua phần việc của mình, em học được rằng một sản phẩm công nghệ tài chính không nên bắt đầu từ việc “có thể tính được gì”, mà nên bắt đầu từ câu hỏi “người dùng cần ra quyết định gì”.
 
-Em cũng học được cách chuyển một vấn đề tài chính thành product requirement. Ví dụ, câu hỏi “danh mục có tốt không?” cần được chuyển thành input cụ thể như ticker, weight, benchmark, time frame và risk-free rate; sau đó mới chuyển thành metrics và dashboard output.
+Em cũng học được cách chuyển một vấn đề tài chính thành product requirement. Ví dụ, câu hỏi “danh mục có tốt không?” cần được chuyển thành input cụ thể như ticker, shares, benchmark, time frame và risk-free rate; sau đó mới chuyển thành metrics và dashboard output.
 
 Ngoài ra, em hiểu hơn tầm quan trọng của input schema. Trong tài chính, nếu input sai hoặc thiếu validation, kết quả phía sau có thể sai hoàn toàn.
 

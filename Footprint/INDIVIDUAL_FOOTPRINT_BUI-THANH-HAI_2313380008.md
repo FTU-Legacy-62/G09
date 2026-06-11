@@ -30,10 +30,10 @@ Dấu ấn rõ nhất của tôi là phần dashboard và luồng demo có thể
 ### **Những việc đã thực sự làm**
 
 - **Việc 1.** Kiểm tra tính khả thi của historical price data, benchmark proxy và hướng API/fallback dữ liệu trong giai đoạn chọn ý tưởng.
-- **Việc 2.** Thiết kế contract dữ liệu cho /api/analyze: tickers, weights, benchmark, date range, risk-free rate và các output cần trả về cho dashboard.
+- **Việc 2.** Thiết kế contract dữ liệu cho /api/analyze: tickers, weights đã được suy ra từ số lượng cổ phiếu, benchmark, date range, risk-free rate và các output cần trả về cho dashboard.
 - **Việc 3.** Kết nối backend/frontend để dashboard nhận đúng portfolio metrics, benchmark metrics, chart data, asset metrics và correlation matrix.
 - **Việc 4.** Sửa integration bugs, API error handling và các trường hợp thiếu ticker/thiếu dữ liệu lịch sử sau feedback demo.
-- **Việc 5.** Tối ưu What-if Simulation: giải thích việc tính lại weight, hiển thị before/after table và chart để người dùng hiểu tác động thêm mã mới.
+- **Việc 5.** Tối ưu What-if Simulation: giải thích việc tính lại tỷ trọng từ số lượng cổ phiếu và giá hiện tại, hiển thị before/after table và chart để người dùng hiểu tác động thêm mã mới.
 - **Việc 6.** Hỗ trợ phần Optimization Comparison: hiển thị optimized weights, chart trước-sau và cảnh báo đây chỉ là historical simulation.
 - **Việc 7.** Tích hợp hoặc kiểm tra phần AI/rule-based explanation fallback để demo không phụ thuộc hoàn toàn vào một response AI.
 - **Việc 8.** Đóng gói source, kiểm tra npm run dev/build, chuẩn bị demo script và final handoff log cho tuần cuối.
@@ -44,11 +44,11 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 |***Hạng mục***|***Phần đã đóng góp***|***Cách kiểm tra***|
 | --- | --- | --- |
-| server.ts | Endpoint /api/analyze, /api/price, /api/optimize; fetch historical data; align dates; calculate/return dashboard-ready data. | Đối chiếu trong source package cuối kỳ. |
-| src/App.tsx | State quản lý portfolio, benchmark, dashboard tabs, handleAnalyze, simulation state, optimization state, AI analysis flow. | Đối chiếu trong source package và demo app. |
-| src/types.ts | Kiểu dữ liệu AnalysisRequest, AnalysisResponse, PortfolioMetrics, AssetMetrics giúp frontend/backend thống nhất dữ liệu. | Đối chiếu trong source package. |
+| backend/server.ts | Endpoint /api/analyze, /api/price, /api/optimize; fetch historical data; align dates; calculate/return dashboard-ready data. | Đối chiếu trong source package cuối kỳ. |
+| frontend/src/App.tsx | State quản lý portfolio, benchmark, dashboard tabs, handleAnalyze, simulation state, optimization state, AI analysis flow. | Đối chiếu trong source package và demo app. |
+| frontend/src/types.ts | Kiểu dữ liệu AnalysisRequest, AnalysisResponse, PortfolioMetrics, AssetMetrics giúp frontend/backend thống nhất dữ liệu. | Đối chiếu trong source package. |
 | Dashboard output | Metric cards, performance/PnL line chart, benchmark comparison, asset table, correlation matrix. | Đối chiếu bằng demo Dashboard và pitch deck phần Portfolio Dashboard. |
-| What-if Simulation | Thêm mã/tỷ trọng, tính lại danh mục, so sánh before/after metrics, table và chart. | Đối chiếu bằng tab Simulation và Meeting Minutes tuần 5-7. |
+| What-if Simulation | Thêm mã/số lượng cổ phiếu, tính lại giá trị và tỷ trọng danh mục, so sánh before/after metrics, table và chart. | Đối chiếu bằng tab Simulation và Meeting Minutes tuần 5-7. |
 | Optimization display | Hiển thị optimized weights, before/after comparison và diễn giải kết quả như historical simulation. | Đối chiếu bằng tab Optimization và final demo script. |
 | Final documentation/demo | Run guide, demo script, source packaging, handoff log, workflow evidence. | Đối chiếu bằng Meeting Minutes tuần 7 và bộ nộp cuối. |
 
@@ -68,7 +68,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 ***Bằng chứng phụ có thể kiểm tra:***
 
-- Source package: portfolio-insight-&-optimizer FINAL.zip, đặc biệt các file server.ts, src/App.tsx, src/types.ts, src/components/MetricCard.tsx.
+- Source package: portfolio-insight-&-optimizer FINAL.zip, đặc biệt các file backend/server.ts, frontend/src/App.tsx, frontend/src/types.ts, frontend/src/components/MetricCard.tsx.
 - Pitch Deck/Proposal: các phần Portfolio Dashboard, Portfolio Simulation, Portfolio Optimization và Post-Simulation AI Analysis thể hiện output do phần integration/chart/simulation tạo ra.
 - Midterm Progress Review: Part E ghi Hải phụ trách Frontend Chart + Backend Integration, PnL/performance chart, correlation matrix, result table, what-if simulation comparison và integrated prototype.
 - Ghi chú: nếu không có commit/PR riêng do nhóm làm ngoài GitHub ở giai đoạn đầu, meeting minutes + source package + demo screen là bằng chứng thay thế có thể kiểm tra được.
@@ -84,7 +84,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 
 - Tôi học được rằng sản phẩm tài chính không chỉ cần công thức đúng mà còn cần dữ liệu được align date, normalize ticker và handle lỗi rõ ràng.
 - Tôi hiểu rõ hơn cách thiết kế API response cho frontend: field phải đủ cho chart/table/card, nếu thiếu sẽ làm UI không thể hiển thị đúng.
-- Tôi học cách biến feedback demo thành task kỹ thuật cụ thể: API error, missing data, before/after table, weight rescale note, run guide.
+- Tôi học cách biến feedback demo thành task kỹ thuật cụ thể: API error, missing data, before/after table, ghi chú tính lại tỷ trọng từ số lượng cổ phiếu, run guide.
 - Tôi nhận ra optimization và AI explanation phải có wording cẩn thận để tránh bị hiểu là lời khuyên đầu tư.
 
 ### **Khó khăn đã gặp và cách xử lý**
@@ -93,7 +93,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 | --- | --- |
 | Dữ liệu lịch sử và ticker có thể lỗi hoặc không đồng nhất. | Thiết kế normalize ticker, kiểm tra benchmark proxy, thêm hướng fallback và error message rõ hơn. |
 | Frontend cần đúng field từ backend để render chart/table. | Chốt /api/analyze schema ở tuần 3 và kiểm tra lại trong tuần 4-6 khi tích hợp. |
-| What-if/optimization dễ bị hiểu nhầm là khuyến nghị đầu tư. | Thêm before/after comparison, note về rescale weight và disclaimer “historical simulation only”. |
+| What-if/optimization dễ bị hiểu nhầm là khuyến nghị đầu tư. | Thêm before/after comparison, note về cách tính lại tỷ trọng sau khi thêm số lượng cổ phiếu mới và disclaimer “historical simulation only”. |
 | Demo có rủi ro lỗi nếu API hoặc AI response chậm. | Chuẩn bị run instructions, kiểm tra npm run dev/build và có Gemini/rule-based explanation fallback. |
 
 ### **Lời nhắn cho sinh viên khóa sau**

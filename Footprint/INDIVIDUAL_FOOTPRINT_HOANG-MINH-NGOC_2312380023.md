@@ -24,7 +24,7 @@ Như vậy, vai trò của em trong dự án là xây dựng nền tảng logic 
 
 Dấu ấn cá nhân rõ nhất của em trong sản phẩm nằm ở phần logic phân tích danh mục đầu tư. Đây là phần không trực tiếp thể hiện qua giao diện, nhưng quyết định ý nghĩa của các kết quả mà người dùng nhìn thấy. Nếu giao diện là phần giúp người dùng tương tác với sản phẩm, thì logic tài chính là phần giúp sản phẩm có khả năng đưa ra các kết quả phân tích đáng tin cậy.
 
-Khi người dùng nhập các thông tin như mã cổ phiếu, tỷ trọng từng mã, benchmark, khoảng thời gian phân tích và risk-free rate, hệ thống cần chuyển các thông tin đó thành daily return, portfolio return, benchmark return và các chỉ số như CAGR, Volatility, Sharpe Ratio, Sortino Ratio, Max Drawdown, VaR, CVaR, Beta, Alpha, Tracking Error, Information Ratio và Correlation Matrix. Phần đóng góp của em là xác định vai trò của từng chỉ số, cách tính các chỉ số đó và cách dùng chúng để đánh giá danh mục.
+Khi người dùng nhập các thông tin như mã cổ phiếu, số lượng cổ phiếu từng mã, benchmark, khoảng thời gian phân tích và risk-free rate, hệ thống cần định giá các vị thế để suy ra tỷ trọng, rồi chuyển các thông tin đó thành daily return, portfolio return, benchmark return và các chỉ số như CAGR, Volatility, Sharpe Ratio, Sortino Ratio, Max Drawdown, VaR, CVaR, Beta, Alpha, Tracking Error, Information Ratio và Correlation Matrix. Phần đóng góp của em là xác định vai trò của từng chỉ số, cách tính các chỉ số đó và cách dùng chúng để đánh giá danh mục.
 
 Đóng góp này giúp FinFolio không dừng lại ở việc hiển thị các con số riêng lẻ, mà có thể giải thích danh mục từ nhiều góc độ: lợi nhuận, rủi ro, hiệu quả lợi nhuận trên rủi ro, mức độ so sánh với benchmark và mức độ đa dạng hóa. Nhờ đó, sản phẩm có cơ sở để đưa ra các kết luận như danh mục đang hoạt động tốt, đang có rủi ro cao, đang kém hơn benchmark hoặc cần được cải thiện về hiệu quả risk-return.
 
@@ -82,7 +82,7 @@ Em cũng lập checklist các lỗi cần tránh như không dùng chênh lệch
 
 ### 3.3 Thiết kế logic tính toán của financial engine
 
-Em đã thiết kế trình tự tính toán tài chính cho hệ thống theo hướng: User input  Historical price data  Portfolio metrics  Benchmark comparison  Portfolio conclusion. Cụ thể, sau khi người dùng nhập input bao gồm tickers và số lượng cổ phiếu nắm giữ, web sẽ tự lấy giá đóng cửa của ngày giao dịch gần nhất để tính ra tỷ trọng từng mã trong danh mục. Bên cạnh đó, người dùng cũng sẽ chọn benchmark so sánh (em cũng đưa ra khuyến nghị người dùng nên lấy benchmark là gì để phù hợp với danh mục) và khoảng thời gian đánh giá danh mục. Sau khi có các thông tin trên, web sẽ lấy dữ liệu giá lịch sử cho các mã cổ phiếu và benchmark. Từ đây, web sẽ tính toán các metrics như em đã đề cập trong bảng công thức và sẽ là output để các thành viên khác có thể dùng cho hiển thị, diễn giải và demo.
+Em đã thiết kế trình tự tính toán tài chính cho hệ thống theo hướng: User input -> Historical price data -> Portfolio metrics -> Benchmark comparison -> Portfolio conclusion. Cụ thể, sau khi người dùng nhập input bao gồm tickers và số lượng cổ phiếu nắm giữ, web sẽ tự lấy giá hiện tại hoặc giá gần nhất từ nguồn dữ liệu để tính ra tỷ trọng từng mã trong danh mục. Bên cạnh đó, người dùng cũng sẽ chọn benchmark so sánh (em cũng đưa ra khuyến nghị người dùng nên lấy benchmark là gì để phù hợp với danh mục) và khoảng thời gian đánh giá danh mục. Sau khi có các thông tin trên, web sẽ lấy dữ liệu giá lịch sử cho các mã cổ phiếu và benchmark. Từ đây, web sẽ tính toán các metrics như em đã đề cập trong bảng công thức và sẽ là output để các thành viên khác có thể dùng cho hiển thị, diễn giải và demo.
 
 ### 3.4 Làm rõ logic so sánh với benchmark
 
@@ -152,7 +152,7 @@ Em cũng hỗ trợ kiểm tra logic tính toán bằng dữ liệu thực tế 
 
 Phần đóng góp của em kết nối trực tiếp với sản phẩm cuối cùng vì FinFolio là một website phân tích danh mục đầu tư. Nếu không có logic tài chính, sản phẩm chỉ có giao diện nhập liệu và hiển thị, nhưng không thể đưa ra kết quả phân tích có ý nghĩa. Cụ thể, phần việc của em giúp sản phẩm cuối cùng ở các điểm sau:
 
-- Giúp hệ thống xử lý dữ liệu đầu vào của người dùng: Khi người dùng nhập mã cổ phiếu, tỷ trọng, benchmark và khoảng thời gian, logic của em giúp xác định cách chuyển dữ liệu đó thành return series và portfolio metrics.
+- Giúp hệ thống xử lý dữ liệu đầu vào của người dùng: Khi người dùng nhập mã cổ phiếu, số lượng cổ phiếu, benchmark và khoảng thời gian, logic của em giúp xác định cách định giá vị thế, suy ra tỷ trọng, rồi chuyển dữ liệu đó thành return series và portfolio metrics.
 
 - Giúp sản phẩm tạo ra các chỉ số tài chính chính xác: Các chỉ số như CAGR, volatility, Sharpe Ratio, Max Drawdown, Beta, Alpha và Information Ratio là nền tảng để sản phẩm đánh giá danh mục.
 

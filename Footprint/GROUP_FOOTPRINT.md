@@ -52,7 +52,7 @@ Các phần chính sản phẩm đã làm được:
    Giới thiệu FinFolio là công cụ phân tích và tối ưu hóa danh mục, không phải nền tảng giao dịch thật.
 
 2. **Portfolio input form**  
-   Người dùng nhập danh mục gồm ticker, weight, shares, benchmark, start date và end date. Form có logic chuẩn hóa ticker, ví dụ một số mã Việt Nam có thể được thêm hậu tố `.VN`.
+   Người dùng nhập danh mục gồm mã cổ phiếu, số lượng cổ phiếu đang nắm giữ, benchmark, start date và end date. Form lấy giá hiện tại để ước tính giá trị từng mã và tự tính tỷ trọng danh mục, đồng thời có logic chuẩn hóa ticker, ví dụ một số mã Việt Nam có thể được thêm hậu tố `.VN`.
 
 3. **Backend API `/api/analyze`**  
    API nhận danh mục, lấy hoặc xử lý dữ liệu giá lịch sử, căn ngày giao dịch, tính daily returns, portfolio returns, benchmark returns và các metrics tài chính.
@@ -64,7 +64,7 @@ Các phần chính sản phẩm đã làm được:
    Sản phẩm giải thích các chỉ số theo ngôn ngữ dễ hiểu hơn, ví dụ portfolio đang vượt/kém benchmark, drawdown có cao không, risk-adjusted return có hiệu quả không.
 
 6. **What-if simulation**  
-   Người dùng thử thêm ticker mới với tỷ trọng mục tiêu. Hệ thống scale lại tỷ trọng cũ để tổng danh mục vẫn bằng 100%, sau đó so sánh danh mục hiện tại với danh mục mô phỏng.
+   Người dùng thử thêm ticker mới với số lượng cổ phiếu dự kiến. Hệ thống định giá mã mới theo thị trường, tính lại tổng giá trị danh mục, tự cập nhật tỷ trọng mới cho từng mã và so sánh danh mục hiện tại với danh mục mô phỏng.
 
 7. **Optimization**  
    Người dùng chọn mục tiêu maximize Sharpe Ratio hoặc minimize Volatility. Sản phẩm tạo tỷ trọng tối ưu lịch sử trong phạm vi ràng buộc và hiển thị so sánh trước/sau.
@@ -80,12 +80,12 @@ Các phần chính sản phẩm đã làm được:
 Sản phẩm nhận các thông tin đầu vào sau:
 
 - **Ticker list**: danh sách mã tài sản, ví dụ `FPT.VN`, `HPG.VN`, `MWG.VN`, `VNM`, `SPY` hoặc benchmark tương ứng.
-- **Weights**: tỷ trọng từng mã trong danh mục, tính theo phần trăm.
-- **Shares**: số lượng cổ phiếu/tài sản, dùng để hỗ trợ hiển thị danh mục và mô phỏng.
+- **Shares**: số lượng cổ phiếu/tài sản, dùng để tính giá trị từng vị thế và tự suy ra tỷ trọng danh mục.
+- **Display currency**: đơn vị hiển thị tổng giá trị danh mục, hiện hỗ trợ `VND` và `USD`; giá gốc của từng cổ phiếu vẫn giữ theo currency nguồn dữ liệu.
 - **Benchmark**: mã benchmark dùng để so sánh, ví dụ `VNM` hoặc `^VNINDEX` nếu dữ liệu khả dụng.
 - **Start date và end date**: khoảng thời gian backtest/phân tích lịch sử.
 - **Risk-free rate**: lãi suất phi rủi ro dùng trong Sharpe Ratio và Sortino Ratio, hiện có giá trị mặc định trong API.
-- **Scenario input**: ticker mới và tỷ trọng thêm vào danh mục trong what-if simulation.
+- **Scenario input**: ticker mới và số lượng cổ phiếu muốn thêm vào danh mục trong what-if simulation.
 - **Optimization goal**: mục tiêu tối ưu hóa như maximize Sharpe Ratio hoặc minimize Volatility, kèm ràng buộc min/max weight nếu được bật trong giao diện.
 - **Historical price data**: dữ liệu giá lịch sử từ API công khai hoặc dataset/CSV mẫu trong trường hợp API không ổn định.
 
@@ -94,7 +94,7 @@ Sản phẩm nhận các thông tin đầu vào sau:
 Sản phẩm xử lý input theo pipeline chính sau:
 
 1. **Chuẩn hóa và kiểm tra input**  
-   Ticker được chuẩn hóa về dạng phù hợp. Một số ticker phổ biến hoặc benchmark được giữ nguyên; mã Việt Nam có thể thêm hậu tố `.VN`. Form cần bảo đảm ticker không rỗng, weight là số hợp lệ, tổng weight hợp lý và ngày phân tích không bị sai thứ tự.
+   Ticker được chuẩn hóa về dạng phù hợp. Một số ticker phổ biến hoặc benchmark được giữ nguyên; mã Việt Nam có thể thêm hậu tố `.VN`. Form cần bảo đảm ticker không rỗng, số lượng cổ phiếu là số hợp lệ, benchmark hợp lệ và ngày phân tích không bị sai thứ tự.
 
 2. **Lấy dữ liệu giá lịch sử**  
    Backend gọi dữ liệu giá lịch sử qua API công khai, đồng thời có cơ chế thử các hậu tố ticker nếu mã ban đầu không có dữ liệu. Với benchmark, hệ thống cũng lấy chuỗi giá tương ứng để so sánh.
@@ -110,7 +110,7 @@ Sản phẩm xử lý input theo pipeline chính sau:
    ```
 
 5. **Tính portfolio daily return**  
-   Danh mục được tính bằng tổng daily return từng tài sản nhân với tỷ trọng của tài sản đó:
+   Danh mục được tính bằng tổng daily return từng tài sản nhân với tỷ trọng của tài sản đó. Tỷ trọng này được hệ thống tự suy ra từ số lượng cổ phiếu và giá hiện tại tại thời điểm nhập/mô phỏng:
 
    ```text
    portfolio_return_t = sum(weight_i * asset_return_i_t)
@@ -132,7 +132,7 @@ Sản phẩm xử lý input theo pipeline chính sau:
     Hệ thống tính correlation matrix giữa các tài sản để đánh giá tài sản có di chuyển cùng chiều quá mạnh không. Allocation chart giúp phát hiện danh mục có bị tập trung vào một mã hay không.
 
 11. **What-if simulation**  
-    Khi người dùng thêm một ticker mới, hệ thống scale lại các tỷ trọng cũ để tổng vẫn bằng 100%, thêm ticker mới vào danh mục và tính lại toàn bộ metrics. Kết quả được so sánh với danh mục ban đầu.
+    Khi người dùng thêm một ticker mới và số lượng cổ phiếu dự kiến, hệ thống lấy giá hiện tại, cộng giá trị vị thế mới vào danh mục, tính lại tỷ trọng mới của từng mã và tính lại toàn bộ metrics. Kết quả được so sánh với danh mục ban đầu.
 
 12. **Optimization**  
     Với mục tiêu maximize Sharpe hoặc minimize Volatility, hệ thống thử các tổ hợp weight trong phạm vi ràng buộc, sau đó trả về weight set có chỉ số mục tiêu tốt nhất trong dữ liệu lịch sử. Output được gắn nhãn là historical simulation, không phải dự báo tương lai.
@@ -146,7 +146,7 @@ Sản phẩm xử lý input theo pipeline chính sau:
 1. Người dùng mở sản phẩm FinFolio.
 2. Người dùng đọc phần giới thiệu ở Home để hiểu đây là portfolio analysis prototype, không phải trading platform.
 3. Người dùng vào Portfolio Input.
-4. Người dùng nhập ticker, weight, shares, benchmark, start date và end date.
+4. Người dùng nhập ticker, số lượng cổ phiếu, benchmark, start date và end date.
 5. Người dùng bấm Phân tích ngay.
 6. Backend lấy dữ liệu giá lịch sử, căn ngày giao dịch chung và tính các chỉ số.
 7. Người dùng xem Dashboard: metric cards, return curve, benchmark comparison, asset table, allocation chart và correlation matrix.
@@ -179,8 +179,8 @@ Sản phẩm tạo ra các output sau:
 3. Tạo `.env.local` trên máy local nếu muốn bật AI analysis. Không commit API key lên GitHub.
 4. Chạy `npm run dev`.
 5. Mở `http://localhost:3000`.
-6. Dùng dữ liệu mẫu `FPT.VN` 50%, `HPG.VN` 50%, benchmark `VNM` hoặc `^VNINDEX`, thời gian từ `2023-05-12` đến ngày demo.
-7. Demo dashboard trước, sau đó demo Simulation với `MWG.VN` và demo Optimization.
+6. Dùng dữ liệu mẫu `FPT.VN` 500 cổ phiếu, `HPG.VN` 1000 cổ phiếu, benchmark `VNM` hoặc `^VNINDEX`, thời gian từ `2023-05-12` đến ngày demo.
+7. Demo dashboard trước, sau đó demo Simulation với `MWG.VN` 100 cổ phiếu và demo Optimization.
 8. Khi trình bày, nhấn mạnh sản phẩm là historical analysis/learning tool, không phải trading platform hoặc financial advice.
 
 ## Các lựa chọn thiết kế quan trọng
@@ -221,8 +221,8 @@ Nhóm dùng meeting minutes theo 7 tuần để ghi lại tiến trình, quyết
 | Tuần 1 | Xác định user pain point | Nhóm xác định pain point chính là người dùng khó đánh giá danh mục ở cấp portfolio, đặc biệt về risk, diversification, benchmark và portfolio-level return. | Meeting Minutes Tuần 1; phần Project Logic Chain trong proposal/review. |
 | Tuần 2 | Tiếp tục lên ý tưởng và chốt FinFolio | Nhóm loại bỏ ý tưởng quét báo vì không khả thi, loại bỏ DCF vì quá đơn giản, sau đó chốt FinFolio cuối tuần 2. | Meeting Minutes Tuần 2; product brief; proposal Project Overview. |
 | Tuần 3 | Workflow và phân rã công việc | Nhóm chốt workflow theo lane: Product/Input, Financial Logic, Prototype/UI, User Interaction, Integration, Feedback/Testing/Documentation. | Meeting Minutes Tuần 3; workflow diagram; prompt library. |
-| Tuần 4 | Phát triển sản phẩm và nộp progress review | Nhóm phát triển frontend/backend/chart/simulation, chuẩn bị midterm review và nộp FinFolio Project Progress Review cuối tuần 4. | Meeting Minutes Tuần 4; `FinFolio_Project_Progress_Review`; source files `src/App.tsx`, `server.ts`, `src/types.ts`. |
-| Tuần 5 | Nhận feedback sau demo 1 | Nhóm nhận feedback về dashboard quá nhiều metrics, thiếu giải thích Sharpe/drawdown, data API chưa ổn định, what-if cần giải thích scale weight, optimization dễ bị hiểu là advice. | Meeting Minutes Tuần 5; feedback log; issue/task list sau demo. |
+| Tuần 4 | Phát triển sản phẩm và nộp progress review | Nhóm phát triển frontend/backend/chart/simulation, chuẩn bị midterm review và nộp FinFolio Project Progress Review cuối tuần 4. | Meeting Minutes Tuần 4; `FinFolio_Project_Progress_Review`; source files `frontend/src/App.tsx`, `backend/server.ts`, `frontend/src/types.ts`. |
+| Tuần 5 | Nhận feedback sau demo 1 | Nhóm nhận feedback về dashboard quá nhiều metrics, thiếu giải thích Sharpe/drawdown, data API chưa ổn định, what-if cần giải thích cách tính lại tỷ trọng sau khi thêm mã, optimization dễ bị hiểu là advice. | Meeting Minutes Tuần 5; feedback log; issue/task list sau demo. |
 | Tuần 6 | Nhận feedback sau demo 2 và hardening | Nhóm sửa UI hierarchy, tooltip, disclaimer, API/data handling, chart labels, loading/error states và chuẩn bị demo dataset. | Meeting Minutes Tuần 6; cập nhật giao diện và documentation. |
 | Tuần 7 | Tuần cuối cùng | Nhóm hoàn thiện repo, README, group footprint, individual footprint, demo script, talk track và checklist nộp bài. | Meeting Minutes Tuần 7; README; GROUP_FOOTPRINT; Individual Footprints; final source package. |
 

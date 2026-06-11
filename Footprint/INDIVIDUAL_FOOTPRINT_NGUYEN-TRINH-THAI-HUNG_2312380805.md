@@ -45,9 +45,9 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 | User journey | Luồng Home -> Portfolio Input -> Dashboard -> Evaluation -> Simulation -> Optimization. | Đối chiếu trong pitch deck/proposal và demo app. |
 | Dashboard hierarchy | Key metrics trước, chart/table/correlation sau, advanced detail và warning/tooltip đặt gần điểm người dùng cần hiểu. | Đối chiếu trong dashboard screens và UI/UX revision plan. |
 | Pitch Deck/Proposal pages UI | Home page, Portfolio Input, Portfolio Dashboard, Portfolio Valuation, Portfolio Simulation, Portfolio Optimization. | Đối chiếu trong Finfolio - Multi-design.pdf, đặc biệt các trang 24-30. |
-| src/App.tsx | Cấu trúc tabs/sidebar/screens, dashboard sections, simulation/optimization flow theo user journey. | Đối chiếu trong source package. |
-| src/components/PortfolioForm.tsx | Input form về ticker, weight, benchmark, date range và trạng thái validation/loading/error liên quan đến trải nghiệm nhập dữ liệu. | Đối chiếu trong source package và demo input screen. |
-| src/components/MetricCard.tsx | Cách trình bày chỉ số bằng card, label, icon/trạng thái để người dùng đọc nhanh. | Đối chiếu trong source package và dashboard screen. |
+| frontend/src/App.tsx | Cấu trúc tabs/sidebar/screens, dashboard sections, simulation/optimization flow theo user journey. | Đối chiếu trong source package. |
+| frontend/src/components/PortfolioForm.tsx | Input form về ticker, số lượng cổ phiếu, benchmark, date range và trạng thái validation/loading/error liên quan đến trải nghiệm nhập dữ liệu. | Đối chiếu trong source package và demo input screen. |
+| frontend/src/components/MetricCard.tsx | Cách trình bày chỉ số bằng card, label, icon/trạng thái để người dùng đọc nhanh. | Đối chiếu trong source package và dashboard screen. |
 
 ### Bằng chứng đóng góp
 
@@ -68,7 +68,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 - Pitch Deck/Proposal: các trang Home page, Portfolio Input, Portfolio Dashboard, Portfolio Valuation, Portfolio Simulation và Portfolio Optimization thể hiện rõ output UI/UX.
 - Midterm Progress Review: Part E ghi Hưng phụ trách wireframe, dashboard layout, chart/table plan, metric display structure và user flow.
 - Workflow diagram: Lane An Thái + Hưng - Prototype & UI, Prompt 05-06 về prototype pages và screenshot-based UI/UX refinement.
-- Source package: src/App.tsx, src/components/PortfolioForm.tsx và src/components/MetricCard.tsx là nơi có thể đối chiếu cấu trúc giao diện/flow/component liên quan.
+- Source package: frontend/src/App.tsx, frontend/src/components/PortfolioForm.tsx và frontend/src/components/MetricCard.tsx là nơi có thể đối chiếu cấu trúc giao diện/flow/component liên quan.
 - Ghi chú: nếu không có commit/PR riêng do nhóm làm ngoài GitHub ở giai đoạn đầu, meeting minutes + pitch deck screenshots + source package là bằng chứng thay thế có thể kiểm tra được.
 
 ### Phần đóng góp đó kết nối thế nào với sản phẩm cuối cùng

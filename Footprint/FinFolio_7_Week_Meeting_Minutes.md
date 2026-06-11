@@ -12,6 +12,8 @@
 | Căn cứ xây dựng   | Workflow công việc nhóm, project proposal/pitch deck, progress review nộp cuối tuần 4 và source package của dự án FinFolio. |
 | Ghi chú thời gian | Tài liệu ghi theo Tuần 1-Tuần 7 vì chưa có ngày họp cụ thể; có thể thay bằng ngày thực tế nếu giảng viên yêu cầu.           |
 
+**Lưu ý đồng bộ với bản cuối:** Meeting minutes phản ánh tiến trình theo từng tuần, nên một số quyết định ở giai đoạn đầu vẫn ghi theo thiết kế cũ như nhập tỷ trọng trực tiếp. Bản sản phẩm cuối đã chuyển sang nhập số lượng cổ phiếu, lấy giá hiện tại để suy ra tỷ trọng và dùng các tỷ trọng đó cho phân tích/mô phỏng.
+
 ## Document map
 
 | **\#** | **Phần**                    | **Mục đích**                                                                                   |
@@ -30,7 +32,7 @@ Bảng này giúp nhìn nhanh trách nhiệm của từng thành viên theo từ
 | Tuần 2   | Tiếp tục chọn ý tưởng và chốt FinFolio     | So sánh các ý tưởng: quét báo, DCF, portfolio dashboard; hoàn thiện product brief cho FinFolio.                   | Đánh giá DCF quá đơn điệu; đề xuất logic tài chính đủ sâu cho FinFolio.                                               | Vẽ user journey và dashboard sơ bộ sau khi loại bỏ ý tưởng không khả thi.                   | Tìm công cụ AI web builder/Reflex và xác định cấu trúc trang prototype.                            | Kiểm tra dữ liệu historical price, VN-Index proxy, Yahoo/Vietstock/VNDIRECT fallback.                                 |
 | Tuần 3   | Workflow và phân rã công việc              | Viết PRD ngắn, input schema, validation rules và MVP boundary.                                                    | Viết formula checklist, metric logic, common errors và financial engine spec.                                         | Thiết kế wireframe, dashboard hierarchy, chart/table plan và user flow.                     | Dựng prototype UI ban đầu: Home, Portfolio Input, Dashboard, Evaluation, Simulation, Optimization. | Thiết kế /api/analyze response schema và plan kết nối frontend-backend.                                               |
 | Tuần 4   | Phát triển sản phẩm và nộp progress review | Hoàn thiện input/data plan, sample ticker/API hoặc CSV fallback; viết phần product/MVP trong review.              | Hoàn thiện logic daily return, CAGR, volatility, Sharpe, drawdown, correlation, beta/alpha.                           | Tinh chỉnh UI dashboard, tooltips, layout và visual evidence cho review.                    | Code core pages, state/form validation và khung dashboard.                                         | Kết nối API, metric cards, line chart, asset table, correlation matrix, what-if table; tổng hợp review nộp cuối tuần. |
-| Tuần 5   | Nhận feedback sau demo 1                   | Tổng hợp feedback của giảng viên; ưu tiên giảm scope, làm rõ CSV/API fallback và input guide.                     | Sửa giải thích Sharpe/volatility/drawdown, kiểm tra công thức bằng manual sample.                                     | Giảm overload trên dashboard, thêm hierarchy, tooltip và trạng thái lỗi/loading.            | Sửa form nhập liệu, thông báo lỗi, responsive layout và điều hướng.                                | Sửa lỗi integration/API, giải thích việc rescale weight trong what-if simulation.                                     |
+| Tuần 5   | Nhận feedback sau demo 1                   | Tổng hợp feedback của giảng viên; ưu tiên giảm scope, làm rõ CSV/API fallback và input guide.                     | Sửa giải thích Sharpe/volatility/drawdown, kiểm tra công thức bằng manual sample.                                     | Giảm overload trên dashboard, thêm hierarchy, tooltip và trạng thái lỗi/loading.            | Sửa form nhập liệu, thông báo lỗi, responsive layout và điều hướng.                                | Sửa lỗi integration/API, giải thích việc tính lại tỷ trọng trong what-if simulation.                                  |
 | Tuần 6   | Nhận feedback sau demo 2 và hardening      | Chốt demo dataset, acceptance checklist và cách nói “historical analysis, not advice”.                            | Hoàn thiện thresholds, disclaimer, optimization assumptions và Q&A về công thức.                                      | Polish UI, chart labels, screen consistency, mobile/responsive.                             | Code cleanup, build test, fix navigation/state bugs.                                               | Tối ưu xử lý dữ liệu/API, cải thiện before-after optimization chart, Gemini/rule-based AI explanation fallback.       |
 | Tuần 7   | Tuần cuối - hoàn thiện nộp bài             | Chuẩn bị talk track phần problem, user, MVP, scope; kiểm tra tài liệu nộp.                                        | Chuẩn bị talk track finance logic; kiểm tra số liệu và câu hỏi phản biện.                                             | Chuẩn bị screenshot/mockup cuối và giải thích UX decisions.                                 | Chuẩn bị demo các trang chính và kiểm tra build chạy được.                                         | Đóng gói source, demo script, final documentation, workflow evidence và checklist submit.                             |
 
@@ -116,7 +118,7 @@ Mỗi biên bản được viết theo cấu trúc thống nhất: thông tin cu
 
 - Ý tưởng “quét báo” bị đánh giá không phù hợp với phạm vi nhóm vì khó kiểm soát nguồn dữ liệu, khó chứng minh logic tài chính, dễ lệch sang NLP/news summarization thay vì ứng dụng finance-banking rõ ràng.
 - Ý tưởng DCF được xem là quá đơn điệu và quá đơn giản cho một prototype nhóm: người dùng không nhất thiết cần một công cụ chỉ nhập vài giả định rồi ra valuation, đồng thời khó chia việc đều cho 5 thành viên.
-- Nhóm chuyển trọng tâm sang FinFolio - Portfolio Insight & Optimizer: người dùng nhập tickers, weights, benchmark, date range, risk-free rate; hệ thống tính return/risk/benchmark/correlation, what-if simulation và có thể tối ưu tỷ trọng.
+- Nhóm chuyển trọng tâm sang FinFolio - Portfolio Insight & Optimizer: người dùng nhập tickers, số lượng cổ phiếu, benchmark, date range, risk-free rate; hệ thống suy ra tỷ trọng, tính return/risk/benchmark/correlation, what-if simulation và có thể tối ưu tỷ trọng.
 - FinFolio được chọn vì có chuỗi logic rõ: user input -\> historical data -\> financial calculations -\> charts/dashboard -\> feedback/decision preparation.
 
 #### Quyết định/Kết luận
@@ -162,7 +164,7 @@ Tạo workflow chính thức, PRD, prompt library và phân công từng lane th
 #### Agenda
 
 - Chuyển product brief thành PRD ngắn và MVP definition.
-- Xác định input schema: tickers, weights, benchmark, start/end date, risk-free rate, optional scenario/optimization inputs.
+- Xác định input schema: tickers, shares, benchmark, start/end date, risk-free rate, optional scenario/optimization inputs.
 - Thiết kế financial logic: return, volatility, Sharpe, drawdown, benchmark, correlation, simulation, optimization.
 - Vẽ workflow và handoff giữa các thành viên để tránh trùng việc.
 
@@ -170,7 +172,7 @@ Tạo workflow chính thức, PRD, prompt library và phân công từng lane th
 
 - Workflow chia theo lane: Phương phụ trách Product Planning & Input Design; Ngọc phụ trách Financial Logic; An Thái + Hưng phụ trách Prototype & UI; User lane mô tả điểm người dùng nhập portfolio/chọn optimization; Hải + Phương phụ trách Backend/Frontend Integration; cả nhóm phụ trách Feedback, Testing & Documentation.
 - Nhóm thống nhất mỗi prompt/output phải có sản phẩm bàn giao rõ: product brief, PRD, input schema, formula table, financial engine spec, prototype UI, API response, dashboard components, simulation, optimization, feedback log và final documentation.
-- Input schema phải có validation: ticker không rỗng, weight hợp lệ/tổng 100%, date range đủ dài, benchmark hợp lệ, risk-free rate có giá trị mặc định.
+- Input schema phải có validation: ticker không rỗng, số lượng cổ phiếu hợp lệ, date range đủ dài, benchmark hợp lệ, risk-free rate có giá trị mặc định.
 - Financial logic cần giải thích đơn giản để giảng viên thấy mối liên hệ giữa bài toán tài chính và giải pháp công nghệ.
 
 #### Quyết định/Kết luận
@@ -222,7 +224,7 @@ Code prototype, nối frontend-backend, chuẩn bị evidence cho progress revie
 #### Nội dung thảo luận chính
 
 - Prototype/source package đã có hướng React/Vite frontend, Express backend, TypeScript data types, chart components, financial calculation logic, historical data source hoặc CSV fallback plan, và Gemini/Google AI Studio support cho phần giải thích.
-- Nhóm chuẩn bị evidence theo ba nhóm: product logic flow, prototype/code structure và role-output map. Các file/code được liên hệ với output: App.tsx quản lý tab/state/dashboard; PortfolioForm.tsx xử lý input; server.ts xử lý API/financial calculations; types.ts định nghĩa dữ liệu; MetricCard.tsx hiển thị chỉ số.
+- Nhóm chuẩn bị evidence theo ba nhóm: product logic flow, prototype/code structure và role-output map. Các file/code được liên hệ với output: frontend/src/App.tsx quản lý tab/state/dashboard; frontend/src/components/PortfolioForm.tsx xử lý input; backend/server.ts xử lý API/financial calculations; frontend/src/types.ts định nghĩa dữ liệu; frontend/src/components/MetricCard.tsx hiển thị chỉ số.
 - Progress review cần làm rõ FinFolio là công cụ phân tích lịch sử và học tài chính, không phải trading platform hoặc lời khuyên đầu tư tuyệt đối.
 - Nội dung review cuối tuần 4 phải thể hiện mọi thành viên có output cụ thể, không chỉ ghi vai trò chung.
 
@@ -277,7 +279,7 @@ Demo để nhận feedback, sau đó sửa UI/UX, data reliability, error handli
 - Giảng viên góp ý dashboard đang có nhiều metric, có thể làm người mới khó hiểu. Nhóm cần ưu tiên vài chỉ số chính trước, đưa metric nâng cao xuống phần chi tiết hoặc tooltip.
 - Sharpe Ratio, Max Drawdown, VaR/CVaR, correlation cần được giải thích bằng ngôn ngữ đơn giản, tránh để người dùng nhìn số nhưng không biết tốt/xấu.
 - Data/API với ticker Việt Nam có nguy cơ fail hoặc thiếu lịch sử. Nhóm cần chuẩn bị ticker-format guidance và sample CSV/dataset fallback cho demo.
-- What-if simulation cần ghi rõ khi thêm ticker mới thì weight cũ được scale lại để tổng bằng 100%, nếu không người dùng sẽ hiểu sai kết quả.
+- What-if simulation cần ghi rõ khi thêm ticker mới thì hệ thống lấy số lượng cổ phiếu và giá hiện tại để tính lại tỷ trọng toàn danh mục, nếu không người dùng sẽ hiểu sai kết quả.
 - Optimization output và AI explanation phải có nhãn “historical simulation only”, không dùng từ ngữ như buy/sell recommendation.
 
 #### Quyết định/Kết luận

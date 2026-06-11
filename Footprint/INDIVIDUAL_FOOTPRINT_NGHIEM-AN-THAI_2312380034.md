@@ -42,9 +42,9 @@ Trước khi xây dựng bất kỳ trang nào, tôi đã làm việc với Ng�
 **4.2 Trang nhập danh mục (Tuần 3-4, hoàn thiện Tuần 5-6)**
 
 - Xây dựng form nhập danh mục theo input schema của Phương và wireframe của Hưng.
-- Tự động phân phối lại tỷ trọng: khi thêm hoặc xóa mã, tỷ trọng được tính đều lại để tổng luôn bằng 100%, tránh lỗi nhập liệu.
-- Validation 3 lớp (ticker trống, tổng tỷ trọng ≠ 100%, thiếu benchmark) với thông báo lỗi.
-- Dropdown benchmark với 5 tùy chọn có sẵn (VN-Index, VN30, S&P 500, Nasdaq, Bitcoin) và tùy chọn nhập ticker tùy chỉnh bổ sung sau feedback Tuần 5.
+- Tự động tính tỷ trọng từ số lượng cổ phiếu và giá hiện tại: khi thêm hoặc xóa mã, tổng giá trị danh mục và tỷ trọng từng mã được cập nhật lại để tổng luôn bằng 100%.
+- Validation 3 lớp (ticker trống, số lượng cổ phiếu không hợp lệ, thiếu benchmark) với thông báo lỗi.
+- Dropdown benchmark với các lựa chọn chính (VN-Index/VNM proxy, S&P 500/SPY, MSCI Emerging Markets/EEM) và tùy chọn nhập ticker tùy chỉnh bổ sung sau feedback Tuần 5.
 - Sửa validation và responsive layout theo sprint Tuần 5 sau feedback Demo 1.
 
 **4.3 Layout Dashboard (Tuần 4, Tuần 6)**
@@ -74,7 +74,7 @@ Trước khi xây dựng bất kỳ trang nào, tôi đã làm việc với Ng�
 | ------------------------------- | -------------------------------------------------------------------------- | ---------------------------- |
 | **Cấu trúc dữ liệu chung**      | Thống nhất type definitions với Ngọc và Hải trước khi build                | Backend + charts             |
 | **Trang Home**                  | Landing page với 4 feature cards và nút bắt đầu                            | Điểm vào của người dùng      |
-| **Trang nhập danh mục**         | Form auto-redistribution, validation 3 lớp, benchmark selector, date range | Người dùng → luồng phân tích |
+| **Trang nhập danh mục**         | Form nhập số lượng cổ phiếu, tự tính tỷ trọng, validation 3 lớp, benchmark selector, date range | Người dùng → luồng phân tích |
 | **Layout Dashboard**            | 12 metric cards theo 3 hàng ưu tiên, guard state, tooltips                 | Backend output → hiển thị    |
 | **Sidebar navigation**          | 6-tab nav, active state, pulsing indicator, session persistence            | Kết nối 6 trang              |
 | **Trang Đánh giá**              | Panel nhận xét AI + evaluation cards với loading state async               | AI + evaluation labels       |
@@ -99,7 +99,7 @@ Các mục sau trong biên bản họp 7 tuần ghi trực tiếp task tôi đư
 
 **6.2 Kiểm tra prototype**
 
-- Thêm mã cổ phiếu và khối lượng → tỷ trọng tự phân phối lại với giá hiện tại, tổng vẫn là 100%.
+- Thêm mã cổ phiếu và khối lượng → giá trị danh mục và tỷ trọng được tự tính lại theo giá hiện tại, tổng tỷ trọng vẫn là 100%.
 - Vào Dashboard khi chưa submit → xuất hiện prompt guard thay vì trang trống.
 - Chuyển tab sau khi nhập dữ liệu → dữ liệu từ form vẫn được giữ nguyên.
 - Hover vào icon info trên metric card → tooltip giải thích chỉ số xuất hiện.
@@ -109,10 +109,10 @@ Các mục sau trong biên bản họp 7 tuần ghi trực tiếp task tôi đư
 
 | **Tên file**                         | Mô tả          |
 | ------------------------------------ | -------------------------------------------------------------------------------- |
-| **src/types.ts**                     | Cấu trúc dữ liệu chung. Đã thống nhất với Ngọc trước khi bắt đầu build.          |
-| **src/components/PortfolioForm.tsx** | Trang nhập danh mục: validation, auto-weight redistribution, benchmark selector. |
-| **src/components/MetricCard.tsx**    | Card chỉ số tái sử dụng với màu trạng thái, badge và tooltip.                    |
-| **src/App.tsx**                      | File chính: 6 page layouts, navigation, global state, API call, tích hợp AI.     |
+| **frontend/src/types.ts**                     | Cấu trúc dữ liệu chung. Đã thống nhất với Ngọc trước khi bắt đầu build.          |
+| **frontend/src/components/PortfolioForm.tsx** | Trang nhập danh mục: validation, tự tính tỷ trọng từ số lượng cổ phiếu, benchmark selector. |
+| **frontend/src/components/MetricCard.tsx**    | Card chỉ số tái sử dụng với màu trạng thái, badge và tooltip.                    |
+| **frontend/src/App.tsx**                      | File chính: 6 page layouts, navigation, global state, API call, tích hợp AI.     |
 
 **7\. Đóng góp kết nối với sản phẩm cuối như thế nào**
 
@@ -134,9 +134,9 @@ Handoff với chart components của Hải suôn sẻ nhất vì thống nhất 
 
 **9\. Khó khăn tôi đã gặp và cách xử lý**
 
-**9.1: Phân phối lại tỷ trọng ban đầu xảy ra nhiều lỗi**
+**9.1: Tính lại tỷ trọng từ số lượng cổ phiếu ban đầu xảy ra nhiều lỗi**
 
-Phiên bản đầu tiên đã cố định tỷ trọng tùy chỉnh và đôi khi không reset khi thêm mã mới. Tôi xử lý bằng cách sửa code và thêm ghi chú giải thích bên dưới rằng tỷ trọng đã được tính lại đều và có thể điều chỉnh thủ công.
+Phiên bản đầu tiên còn thiên về nhập tỷ trọng thủ công và đôi khi không reset khi thêm mã mới. Tôi xử lý bằng cách sửa luồng nhập sang số lượng cổ phiếu, lấy giá hiện tại để tự tính tỷ trọng và thêm ghi chú giải thích bên dưới rằng tỷ trọng được hệ thống cập nhật lại.
 
 **9.2: Dashboard cảm giác quá tải (feedback Demo 1)**
 
@@ -150,5 +150,5 @@ AI call mất vài giây. Phiên bản đầu hiện trang trống. Xử lý: th
 
 - Thống nhất tên field API response với teammate backend trước khi build bất kỳ màn hình hiển thị nào. Một buổi họp 1 tiếng ở Tuần 3 để thống nhất có thể tiết kiệm nhiều thời gian khi chuyển qua các bước tiếp theo.
 - Test với người ngoài nhóm. Teammate sẽ biết sản phẩm hoạt động thế nào nên cần người lạ trải nghiệm để tìm ra vấn đề tồn đọng.
-- Khi dùng AI để tạo UI, hãy mô tả trải nghiệm bạn muốn thay vì mô tả công nghệ. 'Người dùng thấy tổng tỷ trọng cập nhật ngay khi gõ' hiệu quả hơn 'dùng useState với onChange'
+- Khi dùng AI để tạo UI, hãy mô tả trải nghiệm bạn muốn thay vì mô tả công nghệ. 'Người dùng thấy giá trị danh mục và tỷ trọng cập nhật ngay khi nhập số lượng cổ phiếu' hiệu quả hơn 'dùng useState với onChange'
 - Giữ log ngắn về những gì bạn đã prompt.
