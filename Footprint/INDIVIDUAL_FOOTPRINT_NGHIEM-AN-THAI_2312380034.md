@@ -93,7 +93,7 @@ Các phần cụ thể có thể đối chiếu trong source package, proposal/p
 | Tuần 4 | Chuẩn bị demo frontend với Home, Input, Dashboard, validation/loading/error states. | Integrated frontend review. | Chứng minh phần frontend đã đi vào luồng demo giữa kỳ. |
 | Tuần 5 | Sửa form validation, loading/error states, responsive layout và navigation theo feedback Demo 1. | Patched frontend sau feedback. | Tiếp thu feedback để chỉnh sửa cụ thể. |
 | Tuần 6 | Dọn route/navigation, state handling, build test và fix lỗi form/loading. | Cleaned frontend + build test. | Giúp app ổn định hơn trước final demo. |
-| Tuần 7 | Sửa lỗi và hoàn thiện web. | Final frontend pages. | Chứng minh đóng góp ở giai đoạn hoàn thiện sản phẩm cuối kỳ. |
+| Tuần 7 | Sửa lỗi và hoàn thiện web. | Final frontend pages. | Đóng góp ở giai đoạn hoàn thiện sản phẩm cuối kỳ. |
 
 ***Bằng chứng phụ có thể kiểm tra:***
 
