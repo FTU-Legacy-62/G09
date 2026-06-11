@@ -8,11 +8,11 @@ G09
 
 | Họ tên | Mã sinh viên | Vai trò chính |
 |---|---|---|
-| Phương | Chưa cập nhật | Lập kế hoạch sản phẩm và thiết kế luồng nhập dữ liệu |
-| Ngọc | Chưa cập nhật | Logic tài chính và tính toán backend |
-| Hưng | Chưa cập nhật | Thiết kế UI/UX và kế hoạch trực quan hóa bảng điều khiển |
+| Phạm Minh Phương | Chưa cập nhật | Lập kế hoạch sản phẩm và thiết kế luồng nhập dữ liệu |
+| Hoàng Minh Ngọc | Chưa cập nhật | Logic tài chính và tính toán backend |
+| Nguyễn Trịnh Thái Hưng | Chưa cập nhật | Thiết kế UI/UX và kế hoạch trực quan hóa bảng điều khiển |
 | An Thái | Chưa cập nhật | Xây dựng các trang chính phía frontend |
-| Hải | Chưa cập nhật | Tích hợp backend/frontend, biểu đồ và mô phỏng |
+| Bùi Thanh Hải | Chưa cập nhật | Tích hợp backend/frontend, biểu đồ và mô phỏng |
 
 ## Mô tả ngắn về sản phẩm
 
