@@ -215,10 +215,9 @@ Dữ liệu thị trường công khai giúp prototype có thể demo nhanh, nh�
 
 Dashboard có nhiều metrics nên nhóm cần hierarchy: hiển thị chỉ số chính trước, dùng tooltip/label cho chỉ số khó và chuyển metric nâng cao xuống phần chi tiết. Đây là thay đổi đến từ feedback demo.
 
-## Dấu vết quá trình làm việc và meeting minutes
+## Meeting minutes
 
-Nhóm dùng meeting minutes theo 7 tuần để ghi lại tiến trình, quyết định và phân công. Đây là bằng chứng quan trọng giúp đối chiếu sản phẩm cuối cùng với quá trình làm thật của nhóm.
-
+Nhóm dùng meeting minutes theo 7 tuần để ghi lại tiến trình, quyết định và phân công. 
 | Tuần | Trọng tâm | Quyết định / kết quả chính | Evidence có thể đối chiếu |
 |---|---|---|---|
 | Tuần 1 | Xác định user pain point | Nhóm xác định pain point chính là người dùng khó đánh giá danh mục ở cấp portfolio, đặc biệt về risk, diversification, benchmark và portfolio-level return. | Meeting Minutes Tuần 1; phần Project Logic Chain trong proposal/review. |
@@ -239,28 +238,6 @@ Nhóm dùng meeting minutes theo 7 tuần để ghi lại tiến trình, quyết
 | An Thái | Frontend Core Pages | Home, Portfolio Input, Dashboard layout, core state, form validation và page navigation. |
 | Hải | Backend/Frontend Integration + Charts + Simulation | `/api/analyze` integration, metric cards, line chart/PnL chart, correlation matrix, what-if comparison table, optimization chart và demo script. |
 
-### Bằng chứng nhóm nên để trong repo
-
-Để giảng viên dễ đối chiếu, nhóm nên đặt hoặc giữ các bằng chứng sau trong repo:
-
-```text
-README.md
-GROUP_FOOTPRINT.md
-INDIVIDUAL_FOOTPRINT.md
-DOCUMENTATION.md
-src/App.tsx
-src/components/PortfolioForm.tsx
-src/components/MetricCard.tsx
-src/types.ts
-server.ts
-package.json
-/docs/FinFolio_7_Week_Meeting_Minutes.docx
-/docs/FinFolio_Project_Progress_Review.docx
-/docs/Finfolio_Pitch_Deck_or_Proposal.pdf
-/screenshots hoặc /docs/screenshots nếu có ảnh demo
-```
-
-Nếu không muốn đưa file `.docx` hoặc `.pdf` lên repo, nhóm có thể trích nội dung chính vào thư mục `docs/` dưới dạng `.md`. Tuy nhiên, không đưa API key, token, mật khẩu hoặc dữ liệu riêng tư lên GitHub.
 
 ## Điểm nhóm thấy làm tốt
 
@@ -330,7 +307,7 @@ Nếu không muốn đưa file `.docx` hoặc `.pdf` lên repo, nhóm có thể 
 
 ## Gợi ý cho khóa sau
 
-1. **Đừng chốt ý tưởng chỉ vì nghe hiện đại**  
+1. **Đừng chốt ý tưởng mà chưa tìm hiểu kỹ**  
    Hãy kiểm tra sớm xem ý tưởng có finance logic rõ, input-output rõ và demo được không. Nếu ý tưởng phụ thuộc quá nhiều vào dữ liệu khó kiểm soát, nên cân nhắc lại.
 
 2. **Bắt đầu từ sample dataset trước khi gọi API thật**  
