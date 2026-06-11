@@ -1,38 +1,51 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
-import YahooFinanceClass from 'yahoo-finance2';
+import * as yahooFinanceModule from 'yahoo-finance2';
 import * as math from 'mathjs';
 import axios from 'axios';
 import { GoogleGenAI } from "@google/genai";
 
-// yahoo-finance2 v3+ sometimes requires instantiation if the default export is the class.
-// We'll detect if it's a constructor or the instance and disable validation warning logging.
-const yahooFinance = (typeof (YahooFinanceClass as any) === 'function') 
-  ? new (YahooFinanceClass as any)({
-      validation: {
-        logErrors: false,
-        logOptionsErrors: false,
-        allowAdditionalProps: true
-      }
-    }) 
-  : (() => {
-      const instance = YahooFinanceClass;
-      if (instance && typeof (instance as any)._setOpts === 'function') {
-        try {
-          (instance as any)._setOpts({
-            validation: {
-              logErrors: false,
-              logOptionsErrors: false,
-              allowAdditionalProps: true
-            }
-          });
-        } catch (e) {
-          console.log("Could not set validation options on instance:", e);
+const yahooFinanceCandidates = [
+  yahooFinanceModule,
+  (yahooFinanceModule as any).default,
+  (yahooFinanceModule as any).default?.default,
+];
+
+const createYahooFinanceClient = () => {
+  const options = {
+    validation: {
+      logErrors: false,
+      logOptionsErrors: false,
+      allowAdditionalProps: true,
+    },
+  };
+
+  for (const candidate of yahooFinanceCandidates) {
+    if (typeof candidate === 'function') {
+      try {
+        const instance = new candidate(options);
+        if (typeof instance?.quote === 'function' && typeof instance?.chart === 'function') {
+          return instance;
         }
+      } catch (error) {
+        console.log("Could not instantiate yahoo-finance2 candidate:", error);
       }
-      return instance;
-    })();
+    }
+
+    if (typeof candidate?.quote === 'function' && typeof candidate?.chart === 'function') {
+      return candidate;
+    }
+  }
+
+  return null;
+};
+
+const yahooFinance = createYahooFinanceClient();
+
+if (!yahooFinance) {
+  throw new Error("yahoo-finance2 did not expose the expected quote/chart API.");
+}
 
 const formatDateOnly = (d: any): string => {
   if (!d) return '';
