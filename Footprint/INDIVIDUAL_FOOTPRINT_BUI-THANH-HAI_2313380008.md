@@ -42,7 +42,7 @@ Dấu ấn rõ nhất của tôi là phần dashboard và luồng demo có thể
 
 Các phần cụ thể có thể đối chiếu trong source package, proposal/pitch deck, progress review và demo:
 
-| **Hạng mục** | **Phần đã đóng góp** | **Cách kiểm tra** |
+|***Hạng mục***|***Phần đã đóng góp***|***Cách kiểm tra***|
 | --- | --- | --- |
 | server.ts | Endpoint /api/analyze, /api/price, /api/optimize; fetch historical data; align dates; calculate/return dashboard-ready data. | Đối chiếu trong source package cuối kỳ. |
 | src/App.tsx | State quản lý portfolio, benchmark, dashboard tabs, handleAnalyze, simulation state, optimization state, AI analysis flow. | Đối chiếu trong source package và demo app. |
