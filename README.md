@@ -93,10 +93,13 @@ Nếu bạn chưa biết dùng Git, làm theo cách tải ZIP:
 Sau khi mở đúng thư mục, bạn sẽ thấy các file như:
 
 ```text
-package.json
-server.ts
-src/
+Footprint/
+artifacts/
+backend/
+frontend/
+.gitignore
 README.md
+package.json
 ```
 
 ### 4. Mở Terminal trong Visual Studio Code
@@ -298,7 +301,7 @@ npm run start
 
 ## Deploy web lên Render
 
-Render là nền tảng giúp đưa web lên Internet để người khác có thể mở bằng link công khai. Với project này, hãy deploy bằng loại `Web Service`, không dùng `Static Site`, vì app có backend Express trong file `server.ts`.
+Render là nền tảng giúp đưa web lên Internet để người khác có thể mở bằng link công khai. Với project này, hãy deploy bằng loại `Web Service`, không dùng `Static Site`, vì app có backend Express trong thư mục `backend/`.
 
 ### 1. Chuẩn bị trước khi deploy
 
@@ -469,5 +472,5 @@ Không đưa API key, mật khẩu, token, dữ liệu cá nhân hoặc dữ li�
 
 - Repo chính thức của nhóm: `https://github.com/FTU-Legacy-62/G09`.
 - Sản phẩm chính là ứng dụng web bản mẫu trong repo, không phải slide thuyết trình.
-- File `GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, dữ liệu đầu vào, logic xử lý, luồng người dùng, kết quả đầu ra, lựa chọn thiết kế, hạn chế và bài học của nhóm.
-- File `INDIVIDUAL_FOOTPRINT.md` cần ghi rõ đóng góp riêng của từng thành viên và bằng chứng liên quan.
+- File `Footprint/GROUP_FOOTPRINT.md` giải thích chi tiết hơn về vấn đề, dữ liệu đầu vào, logic xử lý, luồng người dùng, kết quả đầu ra, lựa chọn thiết kế, hạn chế và bài học của nhóm.
+- Các file `Footprint/INDIVIDUAL_FOOTPRINT_*.md` ghi rõ đóng góp riêng của từng thành viên và bằng chứng liên quan.
