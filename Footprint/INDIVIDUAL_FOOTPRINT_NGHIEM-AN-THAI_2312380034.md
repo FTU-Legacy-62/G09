@@ -1,25 +1,21 @@
-**INDIVIDUAL FOOTPRINT**
+# Individual Footprint
 
-FinFolio - Portfolio Insight & Optimizer
+## Thành viên 5: Nghiêm An Thái - 2312380034
+|***Thông tin***|***Nội dung***|
+| :- | :- |
+|*Họ tên*|*Nghiêm An Thái*|
+|*Mã sinh viên*|*2312380034*|
+|*Dự án*|*FinFolio - Portfolio Insight & Optimizer*|
+|*Môn học*|*Technology Applications in Finance and Banking - NHA408E*|
+|Nhóm|Group 9|
 
-Ứng dụng công nghệ trong Tài chính Ngân hàng - NHA408E | Nhóm 9
+### **Vai trò trong dự án**
 
-**1\. Thông tin thành viên**
-
-| **Họ và tên**    | Nghiêm An Thái                                         |
-| ---------------- | ------------------------------------------------------ |
-| **Mã sinh viên** | 2312380034                                             |
-| **Môn học**      | Ứng dụng công nghệ trong Tài chính Ngân hàng - NHA408E |
-| **Nhóm**         | Nhóm 9                                                 |
-| **Vai trò**      | Frontend Core Pages                                    |
-
-**2\. Vai trò trong dự án**
-
-**2.1 Vai trò được phân công**
+***Bạn phụ trách vai trò gì trong dự án?***
 
 Vai trò của tôi là Frontend Core Pages, người xây dựng toàn bộ các màn hình mà người dùng thực sự nhìn thấy và tương tác, bao gồm trang giới thiệu, form nhập danh mục, layout dashboard, và các trang phân tích mở rộng (Đánh giá, Mô phỏng, Tối ưu hóa). Vai trò này kết nối người dùng với sản phẩm của tất cả các thành viên còn lại trong nhóm.
 
-**2.2 Vị trí trong workflow nhóm**
+***Vị trí trong workflow nhóm***
 
 | **Thành viên** | **Vai trò**               | **Input cho tôi**                       | **Output của tôi**                               | **Flow**  |
 | -------------- | ------------------------- | --------------------------------------- | ------------------------------------------------ | --------- |
@@ -29,11 +25,13 @@ Vai trò của tôi là Frontend Core Pages, người xây dựng toàn bộ cá
 | **An Thái**    | **Frontend Core Pages**   | -                                       | Form nhập + layout dashboard                     | tôi →     |
 | Thanh Hải      | Charts + Integration      | -                                       | Dashboard UI + data cho chart components của Hải | tôi → Hải |
 
-**3\. Dấu ấn cá nhân trong sản phẩm**
+### **Dấu ấn cá nhân trong sản phẩm**
+
+***Phần nào trong sản phẩm thể hiện rõ đóng góp của bạn nhất?***
 
 Phần thể hiện rõ đóng góp của tôi nhất là trang nhập danh mục (Portfolio Input) và layout dashboard. Form nhập là cổng vào của toàn bộ sản phẩm, mọi phân tích, biểu đồ và nhận xét AI trong FinFolio đều bắt đầu từ việc người dùng điền đúng form này. Dashboard là nơi chuyển 12 chỉ số tài chính do Ngọc xử lý thành một trang có thể đọc và điều hướng được. Tôi cũng xây dựng trang chủ, sidebar và các trang Đánh giá danh mục, Mô phỏng tài sản, Tối ưu hóa tỷ trọng.
 
-**4\. Những việc đã thực sự làm**
+### **Những việc đã thực sự làm**
 
 **4.1 Thống nhất cấu trúc dữ liệu chung (Tuần 3)**
 
@@ -68,9 +66,11 @@ Trước khi xây dựng bất kỳ trang nào, tôi đã làm việc với Ng�
 - Thêm khung gợi ý chọn benchmark và chỉ dẫn cách điền mã cho users.
 - Chạy build test và kiểm tra toàn bộ user flow trước khi nộp.
 
-**5\. Sản phẩm bàn giao**
+### **File, tính năng, dữ liệu, logic, giao diện, tài liệu hoặc phần demo đã đóng góp**
 
-| **Sản phẩm bàn giao**           | **Mô tả**                                                                  | **Kết nối với**              |
+Các phần cụ thể có thể đối chiếu trong source package, proposal/pitch deck, progress review và demo:
+
+|***Hạng mục***|***Phần đã đóng góp***|***Cách kiểm tra***|
 | ------------------------------- | -------------------------------------------------------------------------- | ---------------------------- |
 | **Cấu trúc dữ liệu chung**      | Thống nhất type definitions với Ngọc và Hải trước khi build                | Backend + charts             |
 | **Trang Home**                  | Landing page với 4 feature cards và nút bắt đầu                            | Điểm vào của người dùng      |
@@ -81,23 +81,23 @@ Trước khi xây dựng bất kỳ trang nào, tôi đã làm việc với Ng�
 | **Trang Mô phỏng + Tối ưu hóa** | So sánh chỉ số trước/sau với nhãn màu tốt hơn/kém hơn                      | Backend output → hiển thị    |
 | **Code cleanup + build test**   | Sửa bug Tuần 6-7, dọn state/nav, kiểm tra npm run build                    | Sẵn sàng demo cuối           |
 
-**6\. Bằng chứng đóng góp**
+### **Bằng chứng đóng góp**
 
-**6.1 Ghi chú các buổi họp**
+***Bằng chứng chính:*** `FinFolio_7_Week_Meeting_Minutes.docx`. Meeting minutes là evidence quan trọng nhất vì ghi rõ nhiệm vụ, output, deadline và trạng thái của từng thành viên theo từng tuần.
 
-Các mục sau trong biên bản họp 7 tuần ghi trực tiếp task tôi được phân công và hoàn thành
+|***Tuần***|***Ghi trong meeting minutes***|***Output được ghi nhận***|***Vì sao chứng minh đóng góp cá nhân***|
+| --- | --- | --- | --- |
+| Tuần 1 | An Thái khảo sát khả năng dựng prototype web và luồng cơ bản. | Ghi chú feasibility prototype. | Chứng minh An Thái tham gia từ bước xác định hướng frontend. |
+| Tuần 2 | An Thái tìm công cụ AI web builder và xác định cấu trúc prototype nhiều trang. | Cấu trúc prototype đa trang. | Là tiền đề cho Home/Input/Dashboard/Evaluation/Simulation/Optimization. |
+| Tuần 3 | An Thái dựng prototype UI ban đầu: Home, Portfolio Input, Dashboard, Evaluation, Simulation, Optimization. | Prototype UI nhiều trang. | Đây là evidence trực tiếp cho vai trò Frontend Core Pages. |
+| Tuần 4 | An Thái chuẩn bị demo frontend với Home, Input, Dashboard, validation/loading/error states. | Integrated frontend review. | Chứng minh phần frontend đã đi vào luồng demo giữa kỳ. |
+| Tuần 5 | An Thái sửa form validation, loading/error states, responsive layout và navigation theo feedback Demo 1. | Patched frontend sau feedback. | Chứng minh An Thái chuyển feedback thành chỉnh sửa cụ thể. |
+| Tuần 6 | An Thái dọn route/navigation, state handling, build test và fix lỗi form/loading. | Cleaned frontend + build test. | Giúp app ổn định hơn trước final demo. |
+| Tuần 7 | An Thái sửa lỗi và hoàn thiện web. | Final frontend pages. | Chứng minh đóng góp ở giai đoạn hoàn thiện sản phẩm cuối kỳ. |
 
-| **Tuần** | **Task phân công cho An Thái**                                                                    | **Trạng thái trong biên bản** |
-| -------- | ------------------------------------------------------------------------------------------------- | ----------------------------- |
-| Tuần 1   | Khảo sát khả năng dựng prototype web và luồng cơ bản                                              | Hoàn thành                    |
-| Tuần 2   | Tìm công cụ AI web builder, xác định cấu trúc prototype nhiều trang                               | Hoàn thành                    |
-| Tuần 3   | Dựng prototype UI ban đầu: Home, Portfolio Input, Dashboard, Evaluation, Simulation, Optimization | Đang phát triển → Tuần 4      |
-| Tuần 4   | Chuẩn bị demo frontend: Home, Input, Dashboard, các trạng thái validation/loading/error           | Đang hoàn thiện sau review    |
-| Tuần 5   | Sửa form validation, loading/error states, responsive layout và navigation theo feedback Demo 1   | Đang hoàn thiện               |
-| Tuần 6   | Code cleanup, route/navigation, state handling, build test, fix lỗi form/loading                  | Hoàn thành                    |
-| Tuần 7   | Sửa lỗi và hoàn thiện web                                                                         | Hoàn thành                    |
+***Bằng chứng phụ có thể kiểm tra:***
 
-**6.2 Kiểm tra prototype**
+***Kiểm tra prototype:***
 
 - Thêm mã cổ phiếu và khối lượng → giá trị danh mục và tỷ trọng được tự tính lại theo giá hiện tại, tổng tỷ trọng vẫn là 100%.
 - Vào Dashboard khi chưa submit → xuất hiện prompt guard thay vì trang trống.
@@ -105,7 +105,7 @@ Các mục sau trong biên bản họp 7 tuần ghi trực tiếp task tôi đư
 - Hover vào icon info trên metric card → tooltip giải thích chỉ số xuất hiện.
 - Mở trang Đánh giá khi AI chưa xong → badge 'Đang phân tích AI…' hiện rõ.
 
-**6.3 File nguồn**
+***File nguồn:***
 
 | **Tên file**                         | Mô tả          |
 | ------------------------------------ | -------------------------------------------------------------------------------- |
@@ -114,11 +114,11 @@ Các mục sau trong biên bản họp 7 tuần ghi trực tiếp task tôi đư
 | **frontend/src/components/MetricCard.tsx**    | Card chỉ số tái sử dụng với màu trạng thái, badge và tooltip.                    |
 | **frontend/src/App.tsx**                      | File chính: 6 page layouts, navigation, global state, API call, tích hợp AI.     |
 
-**7\. Đóng góp kết nối với sản phẩm cuối như thế nào**
+### **Phần đóng góp đó kết nối thế nào với sản phẩm cuối cùng**
 
 Nếu không có trang nhập danh mục, không người dùng nào có thể bắt đầu phân tích, trang này là điểm đầu vào duy nhất cho mọi dữ liệu chạy qua phần còn lại của sản phẩm. Nếu không có layout dashboard, 12 chỉ số Ngọc tính sẽ không có nơi hiển thị. Guard state đảm bảo app không bao giờ hiện trang trắng. Sidebar navigation cho phép người dùng di chuyển giữa 6 phần mà không mất dữ liệu. Mọi kết quả tài chính, biểu đồ và nhận xét AI hiển thị trong demo cuối đều đi qua và hiển thị ở các trang tôi đã xây dựng.
 
-**8\. Điều tôi đã học được**
+### **Điều cá nhân học được**
 
 **8.1 Hiển thị dữ liệu và truyền thông tin là hai việc khác nhau**
 
@@ -132,21 +132,15 @@ AI tạo ra web rất nhanh, nhưng phần lớn công sức nằm ở phần đ
 
 Handoff với chart components của Hải suôn sẻ nhất vì thống nhất data format từ Tuần 3. Phần khó nhất là trang Đánh giá phiên bản đầu khi tên field label của Ngọc khác với kỳ vọng của tôi - khiến màu trạng thái không áp dụng được. Sau đó nhóm thói quen review output mới của backend cùng nhau trước khi bắt đầu build display layer.
 
-**9\. Khó khăn tôi đã gặp và cách xử lý**
+### **Khó khăn đã gặp và cách xử lý**
 
-**9.1: Tính lại tỷ trọng từ số lượng cổ phiếu ban đầu xảy ra nhiều lỗi**
+|***Khó khăn đã gặp***|***Cách xử lý***|
+| --- | --- |
+| Tính lại tỷ trọng từ số lượng cổ phiếu ban đầu xảy ra nhiều lỗi. | Sửa luồng nhập sang số lượng cổ phiếu, lấy giá hiện tại để tự tính tỷ trọng và thêm ghi chú giải thích rằng tỷ trọng được hệ thống cập nhật lại. |
+| Dashboard cảm giác quá tải sau feedback Demo 1. | Sắp xếp lại metric rows theo mức độ ưu tiên, thêm tooltip và thống nhất hierarchy với UI revision plan của Hưng. |
+| Trang Đánh giá trông bị lỗi khi đang chờ AI. | Thêm badge 'Đang phân tích AI…' cho trạng thái loading thay vì để trang trống. |
 
-Phiên bản đầu tiên còn thiên về nhập tỷ trọng thủ công và đôi khi không reset khi thêm mã mới. Tôi xử lý bằng cách sửa luồng nhập sang số lượng cổ phiếu, lấy giá hiện tại để tự tính tỷ trọng và thêm ghi chú giải thích bên dưới rằng tỷ trọng được hệ thống cập nhật lại.
-
-**9.2: Dashboard cảm giác quá tải (feedback Demo 1)**
-
-Xử lý trong Tuần 5: Sắp xếp lại metric rows theo mức độ ưu tiên, thêm tooltip, thống nhất hierarchy với UI revision plan của Hưng.
-
-**9.3: Trang Đánh giá trông bị lỗi khi đang chờ AI**
-
-AI call mất vài giây. Phiên bản đầu hiện trang trống. Xử lý: thêm badge hiện 'Đang phân tích AI…' cho trạng thái loading.
-
-**10\. Lời nhắn cho sinh viên khóa sau**
+### **Lời nhắn cho sinh viên khóa sau**
 
 - Thống nhất tên field API response với teammate backend trước khi build bất kỳ màn hình hiển thị nào. Một buổi họp 1 tiếng ở Tuần 3 để thống nhất có thể tiết kiệm nhiều thời gian khi chuyển qua các bước tiếp theo.
 - Test với người ngoài nhóm. Teammate sẽ biết sản phẩm hoạt động thế nào nên cần người lạ trải nghiệm để tìm ra vấn đề tồn đọng.
