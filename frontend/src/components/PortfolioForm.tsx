@@ -46,21 +46,13 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
   const isVNStock = (ticker: string) => {
     if (!ticker) return false;
     const t = ticker.trim().toUpperCase();
-    if (t === 'VNINDEX' || t === '^VNINDEX' || t === 'VNM') {
-      return false;
-    }
     if (t.endsWith('.VN')) return true;
-    if (!t.includes('.') && !t.startsWith('^') && !t.includes('=') && !t.includes('-')) {
-      if (t.length === 3 || t.startsWith('FUE') || t.startsWith('E1VF')) {
-        return true;
-      }
-    }
     return false;
   };
 
   const getRecommendation = () => {
     const validItems = items.filter(item => item.ticker && item.ticker.trim());
-    if (validItems.length === 0) return 'EEM';
+    if (validItems.length === 0) return 'SPY';
     
     const hasVN = validItems.some(item => isVNStock(item.ticker));
     const hasForeign = validItems.some(item => !isVNStock(item.ticker));
@@ -412,7 +404,7 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-[11px] leading-relaxed">
             <div className="space-y-1 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
               <span className="font-semibold text-slate-900 block">📌 Cổ phiếu Việt Nam:</span>
-              <span>Ứng dụng hỗ trợ các mã cổ phiếu trên sàn Việt Nam (HOSE, HNX, UPCOM). Bạn có thể nhập mã 3 chữ cái viết liền (VD: <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">FPT</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">HPG</span>) hoặc nhập đầy đủ với hậu tố <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">.VN</span> (VD: <span className="font-mono bg-slate-100 px-1 py-0.5 rounded">FPT.VN</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">HPG.VN</span>).</span>
+              <span>Ứng dụng nhận diện cổ phiếu Việt Nam khi mã có hậu tố <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">.VN</span>. Hãy nhập đầy đủ như <span className="font-mono bg-slate-100 px-1 py-0.5 rounded">FPT.VN</span>, <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">HPG.VN</span>; nếu chỉ nhập mã 3 ký tự như <span className="font-mono bg-slate-100 px-1 py-0.5 rounded text-indigo-600 font-bold">DIS</span>, hệ thống sẽ xử lý như mã Mỹ/quốc tế trên Yahoo Finance.</span>
             </div>
             <div className="space-y-2 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
               <span className="font-semibold text-slate-900 block">📌 Cổ phiếu Quốc tế:</span>

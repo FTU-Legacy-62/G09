@@ -21,19 +21,6 @@ const normalizeTicker = (ticker: string): string => {
   if (t === 'VNINDEX' || t === '^VNINDEX') {
     return '^VNINDEX';
   }
-  
-  // Popular benchmarks/known foreign assets
-  const knownForeign = ['^GSPC', 'EEM', 'GC=F', 'GLD', '^NDX', 'BTC-USD', 'SPY', 'QQQ', 'DIA', 'IWM', '^VNINDEX', 'VNM'];
-  if (knownForeign.includes(t)) {
-    return t;
-  }
-  
-  // If it's a standard 3-letter stock or common ETF and has no dot/character or other specials
-  if (!t.includes('.') && !t.startsWith('^') && !t.includes('=') && !t.includes('-')) {
-    if (t.length === 3 || t.startsWith('FUE') || t.startsWith('E1VF')) {
-      return t + '.VN';
-    }
-  }
   return t;
 };
 
@@ -46,13 +33,7 @@ const USD_VND_RATE = 25400;
 const isVNStock = (ticker: string) => {
   if (!ticker) return false;
   const t = ticker.trim().toUpperCase();
-  if (t === 'VNINDEX' || t === '^VNINDEX' || t === 'VNM') {
-    return false;
-  }
   if (t.endsWith('.VN')) return true;
-  if (!t.includes('.') && !t.startsWith('^') && !t.includes('=') && !t.includes('-')) {
-    return t.length === 3 || t.startsWith('FUE') || t.startsWith('E1VF');
-  }
   return false;
 };
 
@@ -78,25 +59,16 @@ export default function App() {
     if (!isBenchmarkOverridden) {
       const validItems = portfolioItems.filter(item => item.ticker && item.ticker.trim());
       if (validItems.length === 0) {
-        setBenchmark('VNM');
+        setBenchmark('SPY');
         return;
       }
       
       const hasVN = validItems.some(item => {
-        const t = item.ticker.trim().toUpperCase();
-        if (t.endsWith('.VN')) return true;
-        if (!t.includes('.') && !t.startsWith('^') && !t.includes('=') && !t.includes('-')) {
-          if (t.length === 3 || t.startsWith('FUE') || t.startsWith('E1VF')) {
-            return true;
-          }
-        }
-        return false;
+        return isVNStock(item.ticker);
       });
       
       const hasForeign = validItems.some(item => {
-        const t = item.ticker.trim().toUpperCase();
-        const isVN = t.endsWith('.VN') || (!t.includes('.') && !t.startsWith('^') && !t.includes('=') && !t.includes('-') && (t.length === 3 || t.startsWith('FUE') || t.startsWith('E1VF')));
-        return !isVN;
+        return !isVNStock(item.ticker);
       });
 
       if (hasVN && !hasForeign) {
@@ -157,26 +129,79 @@ export default function App() {
     return benchmarks.find(b => b.value === val)?.label || val;
   };
 
+  const generateRuleBasedAnalysis = (portfolioData: AnalysisResponse, benchmarkLabel: string) => {
+    const pMetrics = portfolioData.portfolioMetrics;
+    const bMetrics = portfolioData.benchmarkMetrics || {};
+    const bCagr = bMetrics.cagr ?? 0;
+    const bCum = bMetrics.cumulativeReturn ?? 0;
+    const bVol = bMetrics.volatility ?? 0;
+    const returnGap = pMetrics.cagr - bCagr;
+    const sharpeLabel = pMetrics.sharpe >= 1 ? 'hiệu quả điều chỉnh theo rủi ro tương đối tốt' : 'hiệu quả điều chỉnh theo rủi ro còn yếu';
+
+    return JSON.stringify({
+      overallSummary: `Danh mục đạt tổng lợi nhuận ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bCum)} của ${benchmarkLabel}. Sharpe Ratio ở mức ${formatNum(pMetrics.sharpe)}, cho thấy ${sharpeLabel} dựa trên dữ liệu lịch sử.`,
+      metricInsights: [
+        {
+          metric: "CAGR",
+          value: formatPercent(pMetrics.cagr),
+          comment: returnGap >= 0
+            ? `Tốc độ tăng trưởng kép đang cao hơn benchmark khoảng ${formatPercent(returnGap)} mỗi năm, phản ánh phân bổ hiện tại có lợi thế về lợi nhuận lịch sử.`
+            : `Tốc độ tăng trưởng kép thấp hơn benchmark khoảng ${formatPercent(Math.abs(returnGap))} mỗi năm, nên cần xem lại tỷ trọng các mã kéo giảm hiệu suất.`
+        },
+        {
+          metric: "Volatility",
+          value: formatPercent(pMetrics.volatility),
+          comment: pMetrics.volatility <= bVol
+            ? "Mức biến động thấp hơn hoặc tương đương benchmark, giúp hồ sơ rủi ro ổn định hơn trong giai đoạn phân tích."
+            : "Mức biến động cao hơn benchmark, nghĩa là danh mục đang cần lợi nhuận vượt trội đủ lớn để bù cho rủi ro tăng thêm."
+        },
+        {
+          metric: "Sharpe Ratio",
+          value: formatNum(pMetrics.sharpe),
+          comment: pMetrics.sharpe >= 1
+            ? "Sharpe trên 1 cho thấy lợi nhuận lịch sử tương đối xứng đáng với rủi ro đã chịu."
+            : "Sharpe dưới 1 cho thấy danh mục chưa tạo đủ lợi nhuận trên mỗi đơn vị rủi ro, nên tối ưu hoặc tái cân bằng có thể hữu ích."
+        },
+        {
+          metric: "Max Drawdown",
+          value: formatPercent(pMetrics.maxDrawdown),
+          comment: Math.abs(pMetrics.maxDrawdown) <= 0.25
+            ? "Mức sụt giảm lịch sử vẫn trong vùng tương đối kiểm soát được."
+            : "Mức sụt giảm lịch sử khá sâu, cần chú ý rủi ro mất vốn tạm thời trong các chu kỳ xấu."
+        }
+      ],
+      strategicAdvice: [
+        "Theo dõi các mã có volatility cao hoặc Sharpe thấp để cân nhắc giảm tỷ trọng khi tái cân bằng.",
+        "Ưu tiên bổ sung tài sản có tương quan thấp nếu muốn giảm biến động tổng thể.",
+        "Xem kết quả tối ưu hóa như một kịch bản tham khảo dựa trên dữ liệu quá khứ, không phải khuyến nghị mua bán chắc chắn."
+      ],
+      marketComparison: returnGap >= 0
+        ? `Danh mục đang vượt ${benchmarkLabel} về CAGR lịch sử, nhưng vẫn cần đối chiếu thêm volatility, drawdown và tracking error để đánh giá chất lượng vượt trội.`
+        : `Danh mục đang kém ${benchmarkLabel} về CAGR lịch sử; trọng tâm cải thiện nên là tăng hiệu quả risk-return thay vì chỉ tăng tỷ trọng các mã biến động mạnh.`
+    });
+  };
+
   const generateAIAnalysis = async (portfolioData: any) => {
     if (!portfolioData) return;
     setIsAiAnalysing(true);
+    const benchmarkLabel = getBenchmarkLabel(benchmark);
     try {
       const response = await fetch("/api/gemini/generate-analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           portfolioData, 
-          benchmark: getBenchmarkLabel(benchmark) 
+          benchmark: benchmarkLabel
         }),
       });
       if (!response.ok) {
         throw new Error("HTTP error " + response.status);
       }
       const result = await response.json();
-      setAiAnalysis(result.text);
+      setAiAnalysis(result.text || generateRuleBasedAnalysis(portfolioData, benchmarkLabel));
     } catch (error) {
       console.error("AI Analysis Error:", error);
-      setAiAnalysis(null);
+      setAiAnalysis(generateRuleBasedAnalysis(portfolioData, benchmarkLabel));
     } finally {
       setIsAiAnalysing(false);
     }
@@ -702,6 +727,44 @@ export default function App() {
       };
     });
   }, [data?.chartData, data?.boundaryDate]);
+
+  const getOptimizationConclusion = () => {
+    if (!data || !preOptData) return null;
+
+    const before = preOptData.portfolioMetrics;
+    const after = data.portfolioMetrics;
+    const sharpeDelta = after.sharpe - before.sharpe;
+    const volDelta = after.volatility - before.volatility;
+    const cagrDelta = after.cagr - before.cagr;
+    const drawdownDelta = Math.abs(after.maxDrawdown) - Math.abs(before.maxDrawdown);
+
+    const primaryImproved = optTarget === 'sharpe' ? sharpeDelta >= 0 : volDelta <= 0;
+    const riskImproved = volDelta <= 0 && drawdownDelta <= 0;
+    const returnImproved = cagrDelta >= 0;
+
+    let headline = primaryImproved ? "Tối ưu hóa đạt đúng mục tiêu chính" : "Tối ưu hóa chưa cải thiện rõ mục tiêu chính";
+    let tone = primaryImproved ? "green" : "yellow";
+    let detail = optTarget === 'sharpe'
+      ? `Sharpe Ratio thay đổi từ ${formatNum(before.sharpe)} lên ${formatNum(after.sharpe)} (${sharpeDelta >= 0 ? '+' : ''}${formatNum(sharpeDelta)} điểm).`
+      : `Volatility thay đổi từ ${formatPercent(before.volatility)} sang ${formatPercent(after.volatility)} (${volDelta <= 0 ? '' : '+'}${formatPercent(volDelta)}).`;
+
+    if (primaryImproved && !riskImproved) {
+      headline = "Tối ưu cải thiện mục tiêu nhưng rủi ro phụ cần theo dõi";
+      tone = "yellow";
+    }
+
+    const recommendation = [
+      returnImproved
+        ? `CAGR sau tối ưu cao hơn trước ${formatPercent(cagrDelta)}, cho thấy kịch bản phân bổ mới cải thiện lợi nhuận lịch sử.`
+        : `CAGR sau tối ưu thấp hơn trước ${formatPercent(Math.abs(cagrDelta))}, đây có thể là đánh đổi để giảm rủi ro hoặc tăng hiệu quả điều chỉnh theo rủi ro.`,
+      riskImproved
+        ? `Volatility và Max Drawdown đều không xấu hơn, nên cấu trúc rủi ro sau tối ưu lành mạnh hơn trong giai đoạn backtest.`
+        : `Một trong các chỉ số rủi ro đang xấu hơn; nên xem kết quả này như phương án tham khảo và kiểm tra thêm ở giai đoạn ngoài mẫu.`,
+      "Kết quả tối ưu chỉ dựa trên dữ liệu lịch sử, benchmark và ràng buộc tỷ trọng hiện tại; không nên xem là khuyến nghị mua bán chắc chắn."
+    ];
+
+    return { headline, tone, detail, recommendation };
+  };
 
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans">
@@ -2027,6 +2090,40 @@ export default function App() {
                       </table>
                     </div>
                   </div>
+
+                  {(() => {
+                    const conclusion = getOptimizationConclusion();
+                    if (!conclusion) return null;
+                    return (
+                      <div className={`p-8 rounded-3xl border space-y-5 ${
+                        conclusion.tone === 'green'
+                          ? 'bg-emerald-50 border-emerald-100 text-emerald-900'
+                          : 'bg-amber-50 border-amber-100 text-amber-950'
+                      }`}>
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-2xl ${
+                            conclusion.tone === 'green'
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-amber-100 text-amber-700'
+                          }`}>
+                            <Target size={20} />
+                          </div>
+                          <div>
+                            <h3 className="text-xl font-bold">Nhận xét cuối cùng sau tối ưu hóa</h3>
+                            <p className="text-sm font-semibold opacity-80 mt-1">{conclusion.headline}</p>
+                          </div>
+                        </div>
+                        <p className="text-sm leading-relaxed font-medium">{conclusion.detail}</p>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          {conclusion.recommendation.map((item: string, idx: number) => (
+                            <div key={idx} className="bg-white/70 border border-white/80 rounded-2xl p-4 text-xs leading-relaxed font-semibold shadow-sm">
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
             </motion.div>
@@ -2038,7 +2135,7 @@ export default function App() {
             <div className="flex flex-col items-center gap-6">
               <RefreshCw className="text-indigo-600 animate-spin" size={48} />
               <div className="text-center">
-                <p className="font-bold text-slate-900 text-xl tracking-tight">Đang tính toán ma lực tài chính...</p>
+                <p className="font-bold text-slate-900 text-xl tracking-tight">Loading</p>
                 <p className="text-slate-400 text-sm">Vui lòng chờ trong giây lát</p>
               </div>
             </div>

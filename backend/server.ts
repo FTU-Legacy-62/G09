@@ -62,19 +62,7 @@ const normalizeTicker = (ticker: string): string => {
   if (t === 'VNINDEX' || t === '^VNINDEX') {
     return '^VNINDEX';
   }
-  
-  // Popular benchmarks/known foreign assets
-  const knownForeign = ['^GSPC', 'EEM', 'GC=F', 'GLD', '^NDX', 'BTC-USD', 'SPY', 'QQQ', 'DIA', 'IWM', 'VNM', '^VNINDEX'];
-  if (knownForeign.includes(t)) {
-    return t;
-  }
-  
-  // If it's a standard 3-letter stock or common ETF and has no dot/character or other specials
-  if (!t.includes('.') && !t.startsWith('^') && !t.includes('=') && !t.includes('-')) {
-    if (t.length === 3 || t.startsWith('FUE') || t.startsWith('E1VF')) {
-      return t + '.VN';
-    }
-  }
+
   return t;
 };
 
@@ -104,13 +92,14 @@ const fetchHistoricalSafe = async (ticker: string, p1: string, p2: string) => {
   } catch (err: any) {
     console.error(`Lần lấy dữ liệu chính từ Yahoo Finance thất bại cho ${tNorm}: ${err.message}`);
     
-    // Fallback if some ticker fails: try suffix fallback if user didn't write it or typed it differently
-    if (!tNorm.includes('.') && !tNorm.startsWith('^') && !tNorm.includes('=') && !tNorm.includes('-')) {
-      const suffixes = ['.VN', '.HM', '.HS'];
+    // Only explicit ".VN" tickers are treated as Vietnam listings. Other symbols are sent as-is.
+    if (tNorm.endsWith('.VN')) {
+      const baseTicker = tNorm.replace(/\.VN$/, '');
+      const suffixes = ['.HM', '.HS'];
       for (const suffix of suffixes) {
         try {
-          console.log(`Thử hậu tố dự phòng ${suffix} cho ${tNorm}...`);
-          return await tryFetch(tNorm + suffix);
+          console.log(`Thử hậu tố dự phòng ${suffix} cho ${baseTicker}...`);
+          return await tryFetch(baseTicker + suffix);
         } catch (e: any) {
           // continue
         }
