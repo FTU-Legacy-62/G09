@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
+import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine,
   AreaChart, Area, PieChart as RePieChart, Pie, Cell, Legend
 } from 'recharts';
-import { 
-  Activity, Info, ShieldCheck, Zap, 
+import {
+  Activity, Info, ShieldCheck, Zap,
   ChevronRight, RefreshCw, Layers, TrendingDown, TrendingUp,
   Home, PieChart as PieChartIcon, LayoutDashboard, Star, Play, Target,
   Plus, Trash2, ArrowRight, CheckCircle2, Sparkles, BrainCircuit, Bot
@@ -27,6 +27,7 @@ const normalizeTicker = (ticker: string): string => {
 type TabType = 'home' | 'input' | 'dashboard' | 'evaluation' | 'simulation' | 'optimization';
 type SimulatedStock = { ticker: string; shares: number; weight: number };
 type DisplayCurrency = 'VND' | 'USD';
+type OptimizationTarget = 'sharpe' | 'volatility';
 
 const USD_VND_RATE = 25400;
 
@@ -62,11 +63,11 @@ export default function App() {
         setBenchmark('SPY');
         return;
       }
-      
+
       const hasVN = validItems.some(item => {
         return isVNStock(item.ticker);
       });
-      
+
       const hasForeign = validItems.some(item => {
         return !isVNStock(item.ticker);
       });
@@ -87,7 +88,7 @@ export default function App() {
   };
 
   // Simulation state
-  const [simTicker, setSimTicker] = useState(''); 
+  const [simTicker, setSimTicker] = useState('');
   const [simSharesInput, setSimSharesInput] = useState('100');
   const [simQuote, setSimQuote] = useState<{ ticker: string; price: number; currency: string; loading: boolean } | null>(null);
   const [simProjection, setSimProjection] = useState<{
@@ -99,7 +100,7 @@ export default function App() {
   } | null>(null);
   const [simulatedStocks, setSimulatedStocks] = useState<SimulatedStock[]>([]);
   const [isMounted, setIsMounted] = useState(false);
-  
+
   // Dashboard quick edit states
   const [showAddMini, setShowAddMini] = useState(false);
   const [miniTicker, setMiniTicker] = useState('');
@@ -113,9 +114,10 @@ export default function App() {
 
   const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
   const [isAiAnalysing, setIsAiAnalysing] = useState(false);
-  const [optTarget, setOptTarget] = useState<'sharpe' | 'volatility'>('sharpe');
+  const [optTarget, setOptTarget] = useState<OptimizationTarget>('sharpe');
   const [optConstraints, setOptConstraints] = useState({ min: 5, max: 60 });
   const [preOptData, setPreOptData] = useState<any>(null);
+  const [appliedOptTarget, setAppliedOptTarget] = useState<OptimizationTarget | null>(null);
   const [preSimData, setPreSimData] = useState<any>(null);
   const [globalError, setGlobalError] = useState<string | null>(null);
 
@@ -129,7 +131,34 @@ export default function App() {
     return benchmarks.find(b => b.value === val)?.label || val;
   };
 
-  const generateRuleBasedAnalysis = (portfolioData: AnalysisResponse, benchmarkLabel: string) => {
+  const getStrategyContext = (target: OptimizationTarget | null = appliedOptTarget) => {
+    if (target === 'sharpe') {
+      return {
+        status: 'optimized',
+        target,
+        label: 'Đã tối ưu Sharpe Ratio',
+        prompt: 'Danh mục hiện tại là kết quả sau khi người dùng chạy tối ưu hóa theo mục tiêu tối đa Sharpe Ratio. Hãy nhận xét rõ chiến lược sau tối ưu Sharpe này có đáng giữ, cần tái cân bằng thêm hay cần thận trọng ở điểm nào.'
+      };
+    }
+
+    if (target === 'volatility') {
+      return {
+        status: 'optimized',
+        target,
+        label: 'Đã tối ưu Volatility',
+        prompt: 'Danh mục hiện tại là kết quả sau khi người dùng chạy tối ưu hóa theo mục tiêu tối thiểu hóa Volatility. Hãy nhận xét rõ chiến lược sau tối ưu rủi ro này có đánh đổi lợi nhuận như thế nào và có phù hợp với nhà đầu tư phòng thủ hay không.'
+      };
+    }
+
+    return {
+      status: 'not_optimized',
+      target: null,
+      label: 'Chưa tối ưu hóa',
+      prompt: 'Danh mục hiện tại chưa chạy tối ưu hóa. Hãy nhận xét như một kết luận về chiến lược phân bổ hiện tại và khuyến nghị người dùng nên cân nhắc tối ưu Sharpe hay tối ưu Volatility trong trường hợp nào.'
+    };
+  };
+
+  const generateRuleBasedAnalysis = (portfolioData: AnalysisResponse, benchmarkLabel: string, strategyContext = getStrategyContext()) => {
     const pMetrics = portfolioData.portfolioMetrics;
     const bMetrics = portfolioData.benchmarkMetrics || {};
     const bCagr = bMetrics.cagr ?? 0;
@@ -139,7 +168,7 @@ export default function App() {
     const sharpeLabel = pMetrics.sharpe >= 1 ? 'hiệu quả điều chỉnh theo rủi ro tương đối tốt' : 'hiệu quả điều chỉnh theo rủi ro còn yếu';
 
     return JSON.stringify({
-      overallSummary: `Danh mục đạt tổng lợi nhuận ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bCum)} của ${benchmarkLabel}. Sharpe Ratio ở mức ${formatNum(pMetrics.sharpe)}, cho thấy ${sharpeLabel} dựa trên dữ liệu lịch sử.`,
+      overallSummary: `${strategyContext.label}: danh mục đạt tổng lợi nhuận ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bCum)} của ${benchmarkLabel}. Sharpe Ratio ở mức ${formatNum(pMetrics.sharpe)}, cho thấy ${sharpeLabel} dựa trên dữ liệu lịch sử.`,
       metricInsights: [
         {
           metric: "CAGR",
@@ -171,7 +200,11 @@ export default function App() {
         }
       ],
       strategicAdvice: [
-        "Theo dõi các mã có volatility cao hoặc Sharpe thấp để cân nhắc giảm tỷ trọng khi tái cân bằng.",
+        strategyContext.target === 'sharpe'
+          ? "Sau tối ưu Sharpe, nên giữ trọng tâm ở hiệu quả lợi nhuận trên rủi ro; nếu Sharpe vẫn thấp, cần rà lại mã có đóng góp rủi ro lớn nhưng lợi nhuận không tương xứng."
+          : strategyContext.target === 'volatility'
+            ? "Sau tối ưu Volatility, nên kiểm tra phần lợi nhuận bị đánh đổi; danh mục phù hợp hơn với khẩu vị phòng thủ nếu CAGR vẫn chấp nhận được."
+            : "Danh mục chưa tối ưu hóa; nếu mục tiêu là tăng hiệu quả risk-return, nên thử kịch bản tối ưu Sharpe, còn nếu ưu tiên ổn định vốn thì thử tối ưu Volatility.",
         "Ưu tiên bổ sung tài sản có tương quan thấp nếu muốn giảm biến động tổng thể.",
         "Xem kết quả tối ưu hóa như một kịch bản tham khảo dựa trên dữ liệu quá khứ, không phải khuyến nghị mua bán chắc chắn."
       ],
@@ -227,7 +260,7 @@ export default function App() {
     return fallbackText;
   };
 
-  const generateAIAnalysis = async (portfolioData: any) => {
+  const generateAIAnalysis = async (portfolioData: any, strategyContext = getStrategyContext()) => {
     if (!portfolioData) return;
     setIsAiAnalysing(true);
     const benchmarkLabel = getBenchmarkLabel(benchmark);
@@ -235,20 +268,21 @@ export default function App() {
       const response = await fetch("/api/gemini/generate-analysis", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          portfolioData, 
-          benchmark: benchmarkLabel
+        body: JSON.stringify({
+          portfolioData,
+          benchmark: benchmarkLabel,
+          strategyContext
         }),
       });
       if (!response.ok) {
         throw new Error("HTTP error " + response.status);
       }
       const result = await response.json();
-      const fallbackText = generateRuleBasedAnalysis(portfolioData, benchmarkLabel);
+      const fallbackText = generateRuleBasedAnalysis(portfolioData, benchmarkLabel, strategyContext);
       setAiAnalysis(normalizeAnalysisText(result.text, fallbackText));
     } catch (error) {
       console.error("AI Analysis Error:", error);
-      setAiAnalysis(generateRuleBasedAnalysis(portfolioData, benchmarkLabel));
+      setAiAnalysis(generateRuleBasedAnalysis(portfolioData, benchmarkLabel, strategyContext));
     } finally {
       setIsAiAnalysing(false);
     }
@@ -257,9 +291,13 @@ export default function App() {
   const handleAnalyze = async (customParams?: any) => {
     setLoading(true);
     setGlobalError(null);
+    const isFreshAnalyze = !customParams?.isOptimizing && !customParams?.isSimulating;
+    const nextAppliedOptTarget = customParams?.appliedOptTarget ?? (isFreshAnalyze ? null : appliedOptTarget);
+    const strategyContext = customParams?.strategyContext || getStrategyContext(nextAppliedOptTarget);
 
-    if (!customParams?.isOptimizing && !customParams?.isSimulating) {
+    if (isFreshAnalyze) {
        setActiveTab('dashboard');
+       setAppliedOptTarget(null);
     }
     const params = customParams || {
       tickers: portfolioItems.map(i => i.ticker.trim().toUpperCase()),
@@ -282,12 +320,12 @@ export default function App() {
         setGlobalError(result.error);
         return;
       }
-      
+
       // Ensure data is really updated
       setData(result);
-      generateAIAnalysis(result);
-      
-      if (!customParams?.isOptimizing && !customParams?.isSimulating) setActiveTab('dashboard');
+      generateAIAnalysis(result, strategyContext);
+
+      if (isFreshAnalyze) setActiveTab('dashboard');
     } catch (error) {
       console.error(error);
       setGlobalError("Đã xảy ra lỗi khi phân tích dữ liệu.");
@@ -300,7 +338,8 @@ export default function App() {
     if (!data) return;
     setLoading(true);
     setGlobalError(null);
-    
+    const submittedOptTarget = optTarget;
+
     // Store current data as "pre-optimization" data
     setPreOptData({
       ...JSON.parse(JSON.stringify(data)),
@@ -309,7 +348,7 @@ export default function App() {
 
     const tickers = portfolioItems.map(i => i.ticker.trim().toUpperCase());
     const weights = portfolioItems.map(i => i.weight);
-    
+
     try {
       const response = await fetch('/api/optimize', {
         method: 'POST',
@@ -325,7 +364,7 @@ export default function App() {
           optConstraints
         })
       });
-      
+
       const result = await response.json();
       if (result.error) {
         setGlobalError(result.error);
@@ -353,13 +392,16 @@ export default function App() {
       });
 
       setPortfolioItems(optimizedItems);
+      setAppliedOptTarget(submittedOptTarget);
       await handleAnalyze({
         tickers,
         weights: optimizedItems.map(i => i.weight),
         benchmark,
         startDate,
         endDate,
-        isOptimizing: true
+        isOptimizing: true,
+        appliedOptTarget: submittedOptTarget,
+        strategyContext: getStrategyContext(submittedOptTarget)
       });
     } catch (error) {
       console.error(error);
@@ -379,11 +421,11 @@ export default function App() {
 
   const SidebarItem = ({ icon: Icon, label, tab }: { icon: any, label: string, tab: TabType }) => (
     <div className="px-3 py-1">
-      <button 
+      <button
         onClick={() => setActiveTab(tab)}
         className={`w-full flex items-center gap-3 px-4 py-3 rounded-full transition-all duration-350 ${
-          activeTab === tab 
-            ? 'bg-white text-indigo-700 shadow-[0_4px_12px_rgba(92,112,90,0.08)] font-bold border border-slate-200/50' 
+          activeTab === tab
+            ? 'bg-white text-indigo-700 shadow-[0_4px_12px_rgba(92,112,90,0.08)] font-bold border border-slate-200/50'
             : 'text-slate-650 hover:bg-white/50 hover:text-slate-900 font-semibold'
         }`}
       >
@@ -591,7 +633,7 @@ export default function App() {
 
   const handleSimulate = async (currentSimulatedStocks = simulatedStocks) => {
     if (!data) return;
-    
+
     // Store current data as "pre-simulation" data ONLY if it hasn't been set yet
     if (!preSimData) {
       setPreSimData({
@@ -635,7 +677,7 @@ export default function App() {
 
     const nextStocks = [...simulatedStocks];
     const existingIdx = nextStocks.findIndex(s => s.ticker.toUpperCase() === norm.toUpperCase());
-    
+
     if (existingIdx !== -1) {
       nextStocks[existingIdx].shares = normalizedShares;
     } else {
@@ -650,13 +692,13 @@ export default function App() {
         weight: weighted?.weight ?? 0
       };
     });
-    
+
     setSimulatedStocks(weightedSimStocks);
-    
+
     // Reset inputs
     setSimTicker('');
     setSimSharesInput('100');
-    
+
     // Run simulation automatically with new stocks list
     await handleSimulate(weightedSimStocks);
   };
@@ -698,20 +740,20 @@ export default function App() {
       ...item,
       weight: Number((item.weight * scale).toFixed(1))
     }));
-    
+
     const updatedItems = [...scaledItems, { ticker: norm, weight: miniWeight }];
     const total = updatedItems.reduce((acc, i) => acc + i.weight, 0);
     const diff = Number((100 - total).toFixed(1));
-    
+
     if (diff !== 0 && scaledItems.length > 0) {
       scaledItems[0].weight = Number((scaledItems[0].weight + diff).toFixed(1));
     }
-    
+
     const finalItems = [...scaledItems, { ticker: norm, weight: miniWeight }];
     setPortfolioItems(finalItems);
     setShowAddMini(false);
     setMiniTicker('');
-    
+
     await handleAnalyze({
       tickers: finalItems.map(i => i.ticker.trim().toUpperCase()),
       weights: finalItems.map(i => i.weight),
@@ -744,7 +786,7 @@ export default function App() {
     if (diff !== 0 && updatedItems.length > 0) {
       updatedItems[0].weight = Number((updatedItems[0].weight + diff).toFixed(1));
     }
-    
+
     setPortfolioItems(updatedItems);
     await handleAnalyze({
       tickers: updatedItems.map(i => i.ticker.trim().toUpperCase()),
@@ -826,14 +868,14 @@ export default function App() {
             <span className="text-[10px] tracking-widest uppercase font-bold text-indigo-700">Nhóm 9 - Danh mục đầu tư</span>
           </div>
         </div>
-        
+
         <nav className="flex-1 space-y-1">
           <div className="px-6 py-2">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Tổng quan</span>
           </div>
           <SidebarItem icon={Home} label="Trang chủ" tab="home" />
           <SidebarItem icon={Plus} label="Nhập danh mục" tab="input" />
-          
+
           <div className="px-6 py-4">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Phân tích chuyên sâu</span>
           </div>
@@ -856,7 +898,7 @@ export default function App() {
         )}
         <AnimatePresence mode="wait">
           {activeTab === 'home' && (
-            <motion.div 
+            <motion.div
               key="home"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -877,7 +919,7 @@ export default function App() {
                       Công cụ hỗ trợ bạn theo dõi hiệu suất đầu tư lịch sử, phân tích rủi ro biến động, kiểm định độc lập trong mẫu và ngoài mẫu (In-Sample/Out-of-Sample), đồng thời tìm kiếm tỷ trọng phân bổ vốn phù hợp dựa trên kinh tế lượng tài chính hiện đại.
                     </div>
                     <div className="pt-2">
-                      <button 
+                      <button
                         onClick={() => setActiveTab('input')}
                         className="px-8 py-3.5 bg-indigo-600 text-white rounded-full font-bold flex items-center gap-2 hover:bg-indigo-700 hover:shadow-xl active:scale-95 transition-all text-sm shadow-md"
                       >
@@ -887,8 +929,8 @@ export default function App() {
                   </div>
                   <div className="lg:col-span-5 flex justify-center">
                     <div className="relative w-48 h-48 rounded-full bg-indigo-50/50 flex items-center justify-center p-4">
-                      <img 
-                        src={finfolioWelcomeHero} 
+                      <img
+                        src={finfolioWelcomeHero}
                         alt="Linh vật FinFolio"
                         className="w-full h-full object-contain rounded-full"
                         referrerPolicy="no-referrer"
@@ -918,7 +960,7 @@ export default function App() {
           )}
 
           {activeTab === 'input' && (
-            <motion.div 
+            <motion.div
               key="input"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -927,7 +969,7 @@ export default function App() {
               <div className="space-y-8">
                 <h2 className="text-4xl font-bold text-slate-900 tracking-tight">Nhập danh mục đầu tư</h2>
                 <div className="glass-card p-10">
-	                  <PortfolioForm 
+	                  <PortfolioForm
 	                    items={portfolioItems}
 	                    setItems={setPortfolioItems}
 	                    displayCurrency={displayCurrency}
@@ -938,8 +980,8 @@ export default function App() {
                     setStartDate={setStartDate}
                     endDate={endDate}
                     setEndDate={setEndDate}
-                    onSubmit={handleAnalyze} 
-                    loading={loading} 
+                    onSubmit={handleAnalyze}
+                    loading={loading}
                   />
                 </div>
               </div>
@@ -955,7 +997,7 @@ export default function App() {
                   <h3 className="text-xl font-bold text-slate-900">Cần dữ liệu để phân tích</h3>
                   <p className="text-slate-500 max-w-xs mx-auto">Vui lòng nhập danh mục của bạn tại phần "Nhập danh mục" để bắt đầu.</p>
                 </div>
-                <button 
+                <button
                   onClick={() => setActiveTab('input')}
                   className="px-6 py-3 bg-slate-900 text-white rounded-xl font-bold text-sm tracking-tight"
                 >
@@ -965,7 +1007,7 @@ export default function App() {
           )}
 
           {data && activeTab === 'dashboard' && (
-            <motion.div 
+            <motion.div
                key="dashboard"
                initial={{ opacity: 0 }}
                animate={{ opacity: 1 }}
@@ -984,8 +1026,8 @@ export default function App() {
                    {portfolioItems.map(item => (
                      <span key={item.ticker} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-50 border border-slate-200 text-[11px] font-black text-slate-700 rounded-xl uppercase hover:bg-slate-100/80 transition-all shadow-sm">
                        <span>{item.ticker} ({item.weight}%)</span>
-                       <button 
-                         onClick={() => handleDashboardRemoveStock(item.ticker)} 
+                       <button
+                         onClick={() => handleDashboardRemoveStock(item.ticker)}
                          className="p-0.5 rounded-full hover:bg-rose-50 text-slate-400 hover:text-rose-600 transition"
                          title={`Xóa ${item.ticker} khỏi danh mục`}
                        >
@@ -993,10 +1035,10 @@ export default function App() {
                        </button>
                      </span>
                    ))}
-                   
+
                    {!showAddMini ? (
-                     <button 
-                       onClick={() => setShowAddMini(true)} 
+                     <button
+                       onClick={() => setShowAddMini(true)}
                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 hover:text-indigo-800 font-bold border border-indigo-100 rounded-xl transition-all cursor-pointer shadow-sm"
                        title="Thêm nhanh mã so sánh"
                      >
@@ -1005,30 +1047,30 @@ export default function App() {
                      </button>
                    ) : (
                      <div className="inline-flex items-center gap-2 p-1.5 bg-indigo-50/50 border border-indigo-100 rounded-xl animate-fadeIn">
-                       <input 
-                         type="text" 
-                         placeholder="MÃ CK" 
+                       <input
+                         type="text"
+                         placeholder="MÃ CK"
                          value={miniTicker}
                          onChange={(e) => setMiniTicker(e.target.value)}
                          className="w-20 px-2 py-1 text-[11px] font-bold bg-white border border-slate-200 rounded-lg uppercase focus:outline-none focus:border-indigo-400"
                        />
                        <div className="flex items-center gap-1">
-                         <input 
-                           type="number" 
-                           placeholder="%" 
+                         <input
+                           type="number"
+                           placeholder="%"
                            value={miniWeight}
                            onChange={(e) => setMiniWeight(Number(e.target.value))}
                            className="w-12 px-2 py-1 text-[11px] font-bold bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-indigo-400"
                          />
                          <span className="text-[10px] font-bold text-slate-400">%</span>
                        </div>
-                       <button 
+                       <button
                          onClick={handleDashboardAddStock}
                          className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[10px] rounded-lg transition shadow-sm"
                        >
                          Thêm
                        </button>
-                       <button 
+                       <button
                          onClick={() => { setShowAddMini(false); setMiniTicker(''); }}
                          className="p-1 hover:bg-slate-200 rounded text-slate-400 hover:text-slate-650"
                        >
@@ -1040,7 +1082,7 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <MetricCard 
+                <MetricCard
                   title="Tổng lợi nhuận"
                   value={data.portfolioMetrics ? formatPercent(data.portfolioMetrics.cumulativeReturn) : '---'}
                   label={data.evaluation?.details?.cagr?.label || '---'}
@@ -1048,7 +1090,7 @@ export default function App() {
                   status={data.evaluation?.details?.cagr?.status || 'neutral'}
                   description="Tổng mức sinh lời của danh mục trong toàn bộ khoảng thời gian phân tích."
                 />
-                <MetricCard 
+                <MetricCard
                   title="CAGR"
                   value={data.portfolioMetrics ? formatPercent(data.portfolioMetrics.cagr) : '---'}
                   label={data.evaluation?.details?.cagr?.label || '---'}
@@ -1056,7 +1098,7 @@ export default function App() {
                   status={data.evaluation?.details?.cagr?.status || 'neutral'}
                   description="Tỷ lệ tăng trưởng kép hàng năm, cho biết mức lợi nhuận trung bình mỗi năm."
                 />
-                <MetricCard 
+                <MetricCard
                   title="Volatility"
                   value={data.portfolioMetrics ? formatPercent(data.portfolioMetrics.volatility) : '---'}
                   label={data.evaluation?.details?.volatility?.label || '---'}
@@ -1065,7 +1107,7 @@ export default function App() {
                   icon={<Activity size={18} />}
                   description="Độ lệch chuẩn của tỷ suất sinh lời, đo lường mức độ rủi ro và biến động của danh mục."
                 />
-                <MetricCard 
+                <MetricCard
                   title="Sharpe Ratio"
                   value={data.portfolioMetrics ? formatNum(data.portfolioMetrics.sharpe) : '---'}
                   label={data.evaluation?.details?.sharpe?.label || '---'}
@@ -1077,30 +1119,30 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 <MetricCard 
-                    title="Sortino Ratio" 
-                    value={formatNum(data.portfolioMetrics?.sortino)} 
+                 <MetricCard
+                    title="Sortino Ratio"
+                    value={formatNum(data.portfolioMetrics?.sortino)}
                     message={`Benchmark: ${formatNum(data.benchmarkMetrics?.sortino || 0)}`}
                     status="neutral"
                     description="Đo lường lợi nhuận trên rủi ro chiều xuống (downside risk), bỏ qua biến động tích cực."
                  />
-                 <MetricCard 
-                    title="Max Drawdown" 
-                    value={formatPercent(data.portfolioMetrics?.maxDrawdown)} 
+                 <MetricCard
+                    title="Max Drawdown"
+                    value={formatPercent(data.portfolioMetrics?.maxDrawdown)}
                     message={`Benchmark: ${formatPercent(data.benchmarkMetrics?.maxDrawdown || 0)}`}
                     status={Math.abs(data.portfolioMetrics?.maxDrawdown || 0) > 0.3 ? 'red' : 'green'}
                     description="Mức sụt giảm lớn nhất từ đỉnh đến đáy của danh mục. Đo lường rủi ro 'tuyệt đỉnh' trong quá khứ."
                  />
-                 <MetricCard 
-                    title="VaR 95%" 
-                    value={formatPercent(data.portfolioMetrics?.var95)} 
+                 <MetricCard
+                    title="VaR 95%"
+                    value={formatPercent(data.portfolioMetrics?.var95)}
                     message={`Benchmark: ${formatPercent(data.benchmarkMetrics?.var95 || 0)}`}
                     status="neutral"
                     description="Mức lỗ tối đa dự kiến trong 1 ngày với xác suất 95%. Với 95% tin cậy, thiệt hại một ngày sẽ không vượt quá con số này."
                  />
-                 <MetricCard 
-                    title="CVaR 95%" 
-                    value={formatPercent(data.portfolioMetrics?.cvar95)} 
+                 <MetricCard
+                    title="CVaR 95%"
+                    value={formatPercent(data.portfolioMetrics?.cvar95)}
                     message={`Benchmark: ${formatPercent(data.benchmarkMetrics?.cvar95 || 0)}`}
                     status="neutral"
                     description="Kỳ vọng tổn thất trung bình trong 5% trường hợp xấu nhất (đuôi rủi ro). Cho biết nếu xui xẻo vượt ngưỡng VaR, mức lỗ trung bình sẽ là bao nhiêu."
@@ -1108,30 +1150,30 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                 <MetricCard 
-                    title="Beta" 
-                    value={formatNum(data.portfolioMetrics?.beta)} 
+                 <MetricCard
+                    title="Beta"
+                    value={formatNum(data.portfolioMetrics?.beta)}
                     message={`Benchmark: 1.00`}
                     status="neutral"
                     description="Độ nhạy của danh mục so với thị trường. Beta > 1 nghĩa là danh mục biến động mạnh hơn thị trường."
                  />
-                 <MetricCard 
-                    title="Alpha" 
-                    value={formatPercent(data.portfolioMetrics?.alpha)} 
+                 <MetricCard
+                    title="Alpha"
+                    value={formatPercent(data.portfolioMetrics?.alpha)}
                     message={`Benchmark: 0.00%`}
                     status={(data.portfolioMetrics?.alpha || 0) > 0 ? 'green' : 'red'}
                     description="Lợi nhuận vượt trội so với kỳ vọng (dựa trên rủi ro Beta). Alpha dương cho thấy kỹ năng quản lý tốt."
                  />
-                 <MetricCard 
-                    title="Tracking Error" 
-                    value={formatPercent(data.portfolioMetrics?.trackingError)} 
+                 <MetricCard
+                    title="Tracking Error"
+                    value={formatPercent(data.portfolioMetrics?.trackingError)}
                     message={`Benchmark: 0.00%`}
                     status="neutral"
                     description="Mức độ sai lệch giữa lợi nhuận danh mục và Benchmark. Càng thấp nghĩa là càng bám sát chỉ số tham chiếu."
                  />
-                 <MetricCard 
-                    title="Information Ratio" 
-                    value={formatNum(data.portfolioMetrics?.informationRatio)} 
+                 <MetricCard
+                    title="Information Ratio"
+                    value={formatNum(data.portfolioMetrics?.informationRatio)}
                     message={`Benchmark: 0.00`}
                     status={(data.portfolioMetrics?.informationRatio || 0) > 0 ? 'green' : 'red'}
                     description="Lợi nhuận vượt trội trên mỗi đơn vị rủi ro chủ động. Đo lường hiệu quả của việc đi ngược thị trường."
@@ -1274,20 +1316,20 @@ export default function App() {
                   <ResponsiveContainer width="100%" height={350}>
                     <LineChart data={splitChartData}>
                       <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                      <XAxis 
-                        dataKey="date" 
-                        axisLine={false} 
+                      <XAxis
+                        dataKey="date"
+                        axisLine={false}
                         tickLine={false}
                         tick={{ fill: '#94a3b8', fontSize: 10 }}
                         minTickGap={100}
                       />
-                      <YAxis 
-                        axisLine={false} 
-                        tickLine={false} 
+                      <YAxis
+                        axisLine={false}
+                        tickLine={false}
                         tick={{ fill: '#94a3b8', fontSize: 10 }}
                         tickFormatter={(val) => `${val}%`}
                       />
-                      <Tooltip 
+                      <Tooltip
                         contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', padding: '12px' }}
                         labelStyle={{ fontWeight: 'bold', marginBottom: '8px', color: '#1e293b' }}
                         formatter={(value: number, name: string) => {
@@ -1299,12 +1341,12 @@ export default function App() {
                         }}
                       />
                       {data.boundaryDate && (
-                        <ReferenceLine 
-                          x={data.boundaryDate} 
-                          stroke="#cbd5e1" 
-                          strokeWidth={1.5} 
-                          strokeDasharray="4 4" 
-                          label={{ value: 'Ranh giới OOS', fill: '#64748b', fontSize: 9, position: 'top' }} 
+                        <ReferenceLine
+                          x={data.boundaryDate}
+                          stroke="#cbd5e1"
+                          strokeWidth={1.5}
+                          strokeDasharray="4 4"
+                          label={{ value: 'Ranh giới OOS', fill: '#64748b', fontSize: 9, position: 'top' }}
                         />
                       )}
                       <Line type="monotone" dataKey="portfolio_is" stroke="#0ea5e9" strokeWidth={3} dot={false} activeDot={{ r: 6, strokeWidth: 0 }} />
@@ -1360,8 +1402,8 @@ export default function App() {
                                    {portfolioItems.map((col, j) => {
                                       const corr = data.correlationMatrix?.[normalizeTicker(row.ticker)]?.[normalizeTicker(col.ticker)] || (i === j ? 1 : 0.5);
                                       return (
-                                         <td 
-                                          key={col.ticker} 
+                                         <td
+                                          key={col.ticker}
                                           className={`p-3 text-center border border-slate-100 ${i === j ? 'bg-indigo-50 text-indigo-700 font-bold' : 'text-slate-600'}`}
                                          >
                                             {corr?.toFixed(2) || '1.00'}
@@ -1379,7 +1421,7 @@ export default function App() {
           )}
 
           {data && activeTab === 'evaluation' && (
-            <motion.div 
+            <motion.div
               key="evaluation"
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -1395,113 +1437,18 @@ export default function App() {
                 </div>
               </div>
 
-              {aiAnalysis && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="space-y-8"
-                >
-                  {/* Summary Card */}
-                  <div className="p-10 bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-[32px] shadow-2xl relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 text-indigo-400 opacity-20 group-hover:scale-110 transition-transform duration-700">
-                      <Sparkles size={120} />
-                    </div>
-                    
-                    <div className="relative z-10 space-y-6">
-                      <div className="flex items-center gap-3 mb-2">
-                         <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl">
-                            <Bot size={24} className="text-indigo-300" />
-                         </div>
-                         <div>
-                            <h3 className="text-xl font-bold">Cố vấn phân tích AI</h3>
-                            <p className="text-indigo-300 text-xs font-medium uppercase tracking-widest">Phân tích chuyên sâu bằng Gemini AI</p>
-                         </div>
-                      </div>
-                      
-                      <div className="text-xl text-indigo-50 leading-relaxed font-medium">
-                        {(() => {
-                          const parsed = parseAnalysisJson(aiAnalysis);
-                          return parsed?.overallSummary || "Không thể đọc định dạng phân tích. Vui lòng chạy phân tích lại.";
-                        })()}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Metrics Insights */}
-                  {(() => {
-                    const parsed = parseAnalysisJson(aiAnalysis);
-                    if (!parsed?.metricInsights) return null;
-                    return (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {parsed.metricInsights.map((insight: any, idx: number) => (
-                            <motion.div 
-                              key={idx}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: idx * 0.1 }}
-                              className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-md transition-shadow"
-                            >
-                              <div className="flex justify-between items-start mb-3">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{insight.metric}</span>
-                                <span className="text-lg font-black text-indigo-600">{insight.value}</span>
-                              </div>
-                              <p className="text-sm text-slate-600 leading-relaxed font-medium">
-                                {insight.comment}
-                              </p>
-                            </motion.div>
-                          ))}
-                      </div>
-                    );
-                  })()}
-
-                  {/* Advice & Comparison */}
-                  {(() => {
-                    const parsed = parseAnalysisJson(aiAnalysis);
-                    if (!parsed) return null;
-                    return (
-                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                          <div className="lg:col-span-2 p-8 bg-indigo-50 border border-indigo-100 rounded-[32px] space-y-6">
-                            <h3 className="text-lg font-bold text-indigo-900 flex items-center gap-2">
-                               <ShieldCheck size={20} className="text-indigo-500" /> Lời khuyên chiến lược
-                            </h3>
-                            <div className="space-y-4">
-                              {parsed.strategicAdvice?.map((advice: string, idx: number) => (
-                                <div key={idx} className="flex gap-4 items-start">
-                                  <div className="mt-1 w-6 h-6 shrink-0 bg-indigo-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold">
-                                    {idx + 1}
-                                  </div>
-                                  <p className="text-indigo-800 font-medium leading-relaxed">{advice}</p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          
-                          <div className="p-8 bg-emerald-50 border border-emerald-100 rounded-[32px] space-y-6">
-                            <h3 className="text-lg font-bold text-emerald-900 flex items-center gap-2">
-                               <TrendingUp size={20} className="text-emerald-500" /> So với thị trường
-                            </h3>
-                            <p className="text-emerald-800 font-medium leading-relaxed">
-                              {parsed.marketComparison}
-                            </p>
-                          </div>
-                      </div>
-                    );
-                  })()}
-                </motion.div>
-              )}
-
-              <div className="p-10 bg-indigo-50 border border-indigo-100 rounded-3xl space-y-4">
+	              <div className="p-10 bg-indigo-50 border border-indigo-100 rounded-3xl space-y-4">
                  <h3 className="font-bold text-indigo-900 flex items-center gap-2">
-                    <Info size={18} /> Nhận xét tổng quan
+                    <Info size={18} /> Tóm tắt đánh giá
                  </h3>
                  <p className="text-lg text-indigo-700 leading-relaxed font-medium">
                     {data.evaluation?.summary}
                  </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                 {Object.entries(data.evaluation?.details || {}).map(([key, detail]: [string, any]) => (
-                   <div key={key} className={`p-8 border-l-4 rounded-2xl bg-white shadow-soft transition-all hover:-translate-y-1 ${
+	              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+	                 {Object.entries(data.evaluation?.details || {}).map(([key, detail]: [string, any]) => (
+	                   <div key={key} className={`p-8 border-l-4 rounded-2xl bg-white shadow-soft transition-all hover:-translate-y-1 ${
                      detail.status === 'green' ? 'border-emerald-500' :
                      detail.status === 'red' ? 'border-rose-500' :
                      'border-amber-500'
@@ -1518,7 +1465,7 @@ export default function App() {
                               key.toUpperCase()}
                            </h4>
                           <div className="text-3xl font-black text-slate-900">
-                             {key === 'sharpe' ? formatNum(data.portfolioMetrics?.sharpe || 0) : 
+                             {key === 'sharpe' ? formatNum(data.portfolioMetrics?.sharpe || 0) :
                               key === 'cagr' ? formatPercent(data.portfolioMetrics?.cagr || 0) :
                               key === 'volatility' ? formatPercent(data.portfolioMetrics?.volatility || 0) :
                               key === 'maxDrawdown' ? formatPercent(data.portfolioMetrics?.maxDrawdown || 0) :
@@ -1535,14 +1482,106 @@ export default function App() {
                         </span>
                       </div>
                       <p className="text-slate-500 text-sm leading-relaxed">{detail.message}</p>
-                   </div>
-                 ))}
-              </div>
-            </motion.div>
-          )}
+	                   </div>
+	                 ))}
+	              </div>
+
+	              {aiAnalysis && (
+	                <motion.div
+	                  initial={{ opacity: 0, y: 20 }}
+	                  animate={{ opacity: 1, y: 0 }}
+	                  className="space-y-8"
+	                >
+	                  <div className="p-10 bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-[32px] shadow-2xl relative overflow-hidden group">
+	                    <div className="absolute top-0 right-0 p-8 text-indigo-400 opacity-20 group-hover:scale-110 transition-transform duration-700">
+	                      <Sparkles size={120} />
+	                    </div>
+
+	                    <div className="relative z-10 space-y-6">
+	                      <div className="flex items-center gap-3 mb-2">
+	                         <div className="p-3 bg-white/10 backdrop-blur-md rounded-2xl">
+	                            <Bot size={24} className="text-indigo-300" />
+	                         </div>
+	                         <div>
+	                            <h3 className="text-xl font-bold">Kết luận & khuyến nghị chiến lược</h3>
+	                            <p className="text-indigo-300 text-xs font-medium uppercase tracking-widest">{getStrategyContext().label}</p>
+	                         </div>
+	                      </div>
+
+	                      <div className="text-xl text-indigo-50 leading-relaxed font-medium">
+	                        {(() => {
+	                          const parsed = parseAnalysisJson(aiAnalysis);
+	                          return parsed?.overallSummary || "Không thể đọc định dạng phân tích. Vui lòng chạy phân tích lại.";
+	                        })()}
+	                      </div>
+	                    </div>
+	                  </div>
+
+	                  {(() => {
+	                    const parsed = parseAnalysisJson(aiAnalysis);
+	                    if (!parsed?.metricInsights) return null;
+	                    return (
+	                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+	                        {parsed.metricInsights.map((insight: any, idx: number) => (
+		                          <motion.div
+	                            key={idx}
+	                            initial={{ opacity: 0, x: -10 }}
+	                            animate={{ opacity: 1, x: 0 }}
+	                            transition={{ delay: idx * 0.1 }}
+	                            className="p-6 bg-white border border-slate-100 rounded-3xl shadow-sm hover:shadow-md transition-shadow"
+	                          >
+	                            <div className="flex justify-between items-start mb-3">
+	                              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{insight.metric}</span>
+	                              <span className="text-lg font-black text-indigo-600">{insight.value}</span>
+	                            </div>
+	                            <p className="text-sm text-slate-600 leading-relaxed font-medium">
+	                              {insight.comment}
+	                            </p>
+	                          </motion.div>
+	                        ))}
+	                      </div>
+	                    );
+	                  })()}
+
+	                  {(() => {
+	                    const parsed = parseAnalysisJson(aiAnalysis);
+	                    if (!parsed) return null;
+	                    return (
+	                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+	                        <div className="lg:col-span-2 p-8 bg-indigo-50 border border-indigo-100 rounded-[32px] space-y-6">
+	                          <h3 className="text-lg font-bold text-indigo-900 flex items-center gap-2">
+	                             <ShieldCheck size={20} className="text-indigo-500" /> Khuyến nghị hành động
+	                          </h3>
+	                          <div className="space-y-4">
+	                            {parsed.strategicAdvice?.map((advice: string, idx: number) => (
+	                              <div key={idx} className="flex gap-4 items-start">
+	                                <div className="mt-1 w-6 h-6 shrink-0 bg-indigo-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold">
+	                                  {idx + 1}
+	                                </div>
+	                                <p className="text-indigo-800 font-medium leading-relaxed">{advice}</p>
+	                              </div>
+	                            ))}
+	                          </div>
+	                        </div>
+
+	                        <div className="p-8 bg-emerald-50 border border-emerald-100 rounded-[32px] space-y-6">
+	                          <h3 className="text-lg font-bold text-emerald-900 flex items-center gap-2">
+	                             <TrendingUp size={20} className="text-emerald-500" /> Luận điểm đầu tư
+	                          </h3>
+	                          <p className="text-emerald-800 font-medium leading-relaxed">
+	                            {parsed.marketComparison}
+	                          </p>
+	                        </div>
+	                      </div>
+	                    );
+	                  })()}
+	                </motion.div>
+	              )}
+	            </motion.div>
+	          )}
 
           {data && activeTab === 'simulation' && (
-            <motion.div 
+            <motion.div
               key="simulation"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -1558,9 +1597,9 @@ export default function App() {
                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                     <div className="space-y-2">
                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Mã cổ phiếu</label>
-                       <input 
-                        type="text" 
-                        value={simTicker} 
+                       <input
+                        type="text"
+                        value={simTicker}
                         onChange={(e) => setSimTicker(e.target.value)}
                         placeholder="Ví dụ: MWG.VN, FPT.VN"
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-400 transition-all font-bold uppercase"
@@ -1568,11 +1607,11 @@ export default function App() {
                     </div>
                     <div className="space-y-2">
                        <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Khối lượng (Số CP)</label>
-                       <input 
-                        type="number" 
+                       <input
+                        type="number"
                         min={1}
                         step={1}
-                        value={simSharesInput} 
+                        value={simSharesInput}
                         onChange={(e) => setSimSharesInput(e.target.value)}
                         placeholder="Ví dụ: 100"
                         className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-400 transition-all font-bold"
@@ -1593,14 +1632,14 @@ export default function App() {
                        </div>
                     </div>
                     <div className="flex items-end gap-3 font-semibold">
-                       <button 
+                       <button
                         onClick={handleAddSimStock}
                         className="flex-1 py-4 bg-indigo-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 cursor-pointer"
                        >
                          Mô phỏng <Play size={16} fill="currentColor" />
                        </button>
                        {preSimData && (
-                         <button 
+                         <button
                           onClick={handleResetSimulation}
                           className="px-6 py-4 bg-slate-100 text-slate-650 rounded-xl font-bold hover:bg-slate-200 transition-all cursor-pointer border border-slate-200/50"
                           title="Khôi phục danh mục gốc"
@@ -1694,7 +1733,7 @@ export default function App() {
                         </div>
                       );
                     })()}
-                    
+
                     {simulatedStocks.length > 0 && (
                       <div className="col-span-1 md:col-span-4 pt-6 border-t border-slate-100/80 space-y-3">
                         <label className="text-xs font-bold text-indigo-500 uppercase tracking-widest block">Danh sách mã đang mô phỏng ({simulatedStocks.length})</label>
@@ -1702,8 +1741,8 @@ export default function App() {
                           {simulatedStocks.map(s => (
                             <span key={s.ticker} className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 border border-indigo-100 rounded-xl text-xs font-bold text-indigo-750 uppercase hover:bg-indigo-100/60 transition-all shadow-sm">
                               <span>{s.ticker} ({s.shares.toLocaleString('vi-VN')} CP, {s.weight.toFixed(1)}%)</span>
-                              <button 
-                                onClick={() => handleRemoveSimStock(s.ticker)} 
+                              <button
+                                onClick={() => handleRemoveSimStock(s.ticker)}
                                 className="p-0.5 rounded-full hover:bg-rose-50 text-indigo-400 hover:text-rose-600 transition cursor-pointer"
                                 title={`Xóa ${s.ticker}`}
                               >
@@ -1796,10 +1835,10 @@ export default function App() {
                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                         <XAxis dataKey="date" hide />
                         <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}%`} />
-                        <Tooltip 
+                        <Tooltip
                           contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                           formatter={(v: number, name: string) => [
-                            `${v.toFixed(2)}%`, 
+                            `${v.toFixed(2)}%`,
                             name === 'portfolio' ? `Danh mục sau mô phỏng` : 'Danh mục hiện tại'
                           ]}
                         />
@@ -1811,29 +1850,29 @@ export default function App() {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                      { 
-                        label: 'Tổng lợi nhuận (%)', 
-                        before: preSimData.portfolioMetrics.cumulativeReturn * 100, 
-                        after: data.portfolioMetrics.cumulativeReturn * 100, 
-                        status: data.portfolioMetrics.cumulativeReturn >= preSimData.portfolioMetrics.cumulativeReturn ? 'better' : 'worse' 
+                      {
+                        label: 'Tổng lợi nhuận (%)',
+                        before: preSimData.portfolioMetrics.cumulativeReturn * 100,
+                        after: data.portfolioMetrics.cumulativeReturn * 100,
+                        status: data.portfolioMetrics.cumulativeReturn >= preSimData.portfolioMetrics.cumulativeReturn ? 'better' : 'worse'
                       },
-                      { 
+                      {
                         label: 'Biến động (Volatility) (%)',
-                        before: preSimData.portfolioMetrics.volatility * 100, 
-                        after: data.portfolioMetrics.volatility * 100, 
-                        status: data.portfolioMetrics.volatility <= preSimData.portfolioMetrics.volatility ? 'better' : 'worse' 
+                        before: preSimData.portfolioMetrics.volatility * 100,
+                        after: data.portfolioMetrics.volatility * 100,
+                        status: data.portfolioMetrics.volatility <= preSimData.portfolioMetrics.volatility ? 'better' : 'worse'
                       },
-                      { 
-                        label: 'Sharpe Ratio', 
-                        before: preSimData.portfolioMetrics.sharpe, 
-                        after: data.portfolioMetrics.sharpe, 
-                        status: data.portfolioMetrics.sharpe >= preSimData.portfolioMetrics.sharpe ? 'better' : 'worse' 
+                      {
+                        label: 'Sharpe Ratio',
+                        before: preSimData.portfolioMetrics.sharpe,
+                        after: data.portfolioMetrics.sharpe,
+                        status: data.portfolioMetrics.sharpe >= preSimData.portfolioMetrics.sharpe ? 'better' : 'worse'
                       },
-                      { 
-                        label: 'Max Drawdown (%)', 
-                        before: preSimData.portfolioMetrics.maxDrawdown * 100, 
-                        after: data.portfolioMetrics.maxDrawdown * 100, 
-                        status: Math.abs(data.portfolioMetrics.maxDrawdown) <= Math.abs(preSimData.portfolioMetrics.maxDrawdown) ? 'better' : 'worse' 
+                      {
+                        label: 'Max Drawdown (%)',
+                        before: preSimData.portfolioMetrics.maxDrawdown * 100,
+                        after: data.portfolioMetrics.maxDrawdown * 100,
+                        status: Math.abs(data.portfolioMetrics.maxDrawdown) <= Math.abs(preSimData.portfolioMetrics.maxDrawdown) ? 'better' : 'worse'
                       },
                     ].map((res, i) => (
                       <div key={i} className="glass-card p-6 bg-white flex flex-col gap-2 border border-slate-100">
@@ -1900,7 +1939,7 @@ export default function App() {
                           const targetShares = latestSimulatedStock?.shares ?? parseShareInput(simSharesInput);
                           const exists = baseItems.some((item: any) => item.ticker.trim().toUpperCase() === target);
                           const displayTicker = baseItems[0]?.ticker || 'FPT.VN';
-                          
+
                           if (exists) {
                             return `Việc điều chỉnh khối lượng của ${target} thành ${targetShares.toLocaleString('vi-VN')} cổ phiếu khiến tỷ trọng mới xấp xỉ ${targetWeight.toFixed(1)}%, giúp tái cân bằng cấu trúc danh mục và quản trị rủi ro tổng quát so với phân bổ ban đầu.`;
                           } else {
@@ -1915,7 +1954,7 @@ export default function App() {
           )}
 
           {data && activeTab === 'optimization' && (
-            <motion.div 
+            <motion.div
               key="optimization"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1928,7 +1967,7 @@ export default function App() {
 
               <div className="glass-card p-10 bg-white space-y-8">
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div 
+                    <div
                       onClick={() => setOptTarget('sharpe')}
                       className={`p-8 border-2 rounded-3xl relative group cursor-pointer transition-all ${
                         optTarget === 'sharpe' ? 'border-indigo-600 bg-indigo-50' : 'border-slate-100 hover:border-indigo-200'
@@ -1943,7 +1982,7 @@ export default function App() {
                          </div>
                        )}
                     </div>
-                    <div 
+                    <div
                       onClick={() => setOptTarget('volatility')}
                       className={`p-8 border-2 rounded-3xl relative group cursor-pointer transition-all ${
                         optTarget === 'volatility' ? 'border-indigo-600 bg-indigo-50' : 'border-slate-100 hover:border-indigo-200'
@@ -1965,26 +2004,26 @@ export default function App() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Tối thiểu mỗi mã</label>
-                          <input 
-                            type="number" 
-                            value={optConstraints.min} 
+                          <input
+                            type="number"
+                            value={optConstraints.min}
                             onChange={(e) => setOptConstraints({ ...optConstraints, min: Number(e.target.value) })}
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold" 
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold"
                           />
                        </div>
                        <div className="space-y-2">
                           <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Tối đa mỗi mã</label>
-                          <input 
-                            type="number" 
-                            value={optConstraints.max} 
+                          <input
+                            type="number"
+                            value={optConstraints.max}
                             onChange={(e) => setOptConstraints({ ...optConstraints, max: Number(e.target.value) })}
-                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold" 
+                            className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-bold"
                           />
                        </div>
                     </div>
                  </div>
 
-                 <button 
+                 <button
                   onClick={handleOptimize}
                   disabled={loading}
                   className={`w-full py-5 bg-indigo-600 text-white rounded-2xl font-bold text-lg transition-all shadow-xl shadow-indigo-100 flex items-center justify-center gap-3 ${
@@ -2007,29 +2046,29 @@ export default function App() {
                   <h3 className="text-2xl font-bold text-slate-900">Kết quả Tối ưu</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                      { 
-                        label: 'CAGR (%)', 
-                        before: preOptData.portfolioMetrics.cagr * 100, 
-                        after: data.portfolioMetrics.cagr * 100, 
-                        status: data.portfolioMetrics.cagr >= preOptData.portfolioMetrics.cagr ? 'better' : 'worse' 
+                      {
+                        label: 'CAGR (%)',
+                        before: preOptData.portfolioMetrics.cagr * 100,
+                        after: data.portfolioMetrics.cagr * 100,
+                        status: data.portfolioMetrics.cagr >= preOptData.portfolioMetrics.cagr ? 'better' : 'worse'
                       },
-                      { 
+                      {
                         label: 'Biến động (Volatility) (%)',
-                        before: preOptData.portfolioMetrics.volatility * 100, 
-                        after: data.portfolioMetrics.volatility * 100, 
-                        status: data.portfolioMetrics.volatility <= preOptData.portfolioMetrics.volatility ? 'better' : 'worse' 
+                        before: preOptData.portfolioMetrics.volatility * 100,
+                        after: data.portfolioMetrics.volatility * 100,
+                        status: data.portfolioMetrics.volatility <= preOptData.portfolioMetrics.volatility ? 'better' : 'worse'
                       },
-                      { 
-                        label: 'Sharpe Ratio', 
-                        before: preOptData.portfolioMetrics.sharpe, 
-                        after: data.portfolioMetrics.sharpe, 
-                        status: data.portfolioMetrics.sharpe >= preOptData.portfolioMetrics.sharpe ? 'better' : 'worse' 
+                      {
+                        label: 'Sharpe Ratio',
+                        before: preOptData.portfolioMetrics.sharpe,
+                        after: data.portfolioMetrics.sharpe,
+                        status: data.portfolioMetrics.sharpe >= preOptData.portfolioMetrics.sharpe ? 'better' : 'worse'
                       },
-                      { 
-                        label: 'Max Drawdown (%)', 
-                        before: preOptData.portfolioMetrics.maxDrawdown * 100, 
-                        after: data.portfolioMetrics.maxDrawdown * 100, 
-                        status: Math.abs(data.portfolioMetrics.maxDrawdown) <= Math.abs(preOptData.portfolioMetrics.maxDrawdown) ? 'better' : 'worse' 
+                      {
+                        label: 'Max Drawdown (%)',
+                        before: preOptData.portfolioMetrics.maxDrawdown * 100,
+                        after: data.portfolioMetrics.maxDrawdown * 100,
+                        status: Math.abs(data.portfolioMetrics.maxDrawdown) <= Math.abs(preOptData.portfolioMetrics.maxDrawdown) ? 'better' : 'worse'
                       },
                     ].map((res, i) => (
                       <div key={i} className="glass-card p-6 bg-white flex flex-col gap-2">
@@ -2080,10 +2119,10 @@ export default function App() {
                           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
                           <XAxis dataKey="date" hide />
                           <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10 }} tickFormatter={(v) => `${v}%`} />
-                          <Tooltip 
+                          <Tooltip
                             contentStyle={{ borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                             formatter={(v: number, name: string) => [
-                              `${v.toFixed(2)}%`, 
+                              `${v.toFixed(2)}%`,
                               name === 'optimized' ? 'Sau tối ưu' : 'Trước tối ưu'
                             ]}
                           />

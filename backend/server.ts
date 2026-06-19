@@ -750,14 +750,15 @@ app.post("/api/optimize", async (req, res) => {
   }
 });
 
-function generateRuleBasedAnalysis(portfolioData: any, benchmark: string) {
+function generateRuleBasedAnalysis(portfolioData: any, benchmark: string, strategyContext?: any) {
   const pMetrics = portfolioData.portfolioMetrics;
   const bMetrics = portfolioData.benchmarkMetrics || {};
+  const strategyLabel = strategyContext?.label || 'Chưa tối ưu hóa';
   
   const formatPercent = (v: number) => `${(v * 100).toFixed(2)}%`;
   const formatNum = (v: number) => v.toFixed(2);
   
-  const overallSummary = `Danh mục đầu tư có tỷ suất sinh lời lũy kế đạt ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bMetrics.cumulativeReturn || 0)} của Benchmark ${benchmark}. Chỉ số Sharpe đạt ${formatNum(pMetrics.sharpe)} thể hiện hiệu quả sử dụng vốn điều chỉnh theo rủi ro ở mức ${pMetrics.sharpe >= 1 ? 'tốt và tối ưu' : 'cần cải thiện thông qua tái phân bổ tỉ trọng các lớp tài sản'}.`;
+  const overallSummary = `${strategyLabel}: danh mục đầu tư có tỷ suất sinh lời lũy kế đạt ${formatPercent(pMetrics.cumulativeReturn)} so với ${formatPercent(bMetrics.cumulativeReturn || 0)} của Benchmark ${benchmark}. Chỉ số Sharpe đạt ${formatNum(pMetrics.sharpe)} thể hiện hiệu quả sử dụng vốn điều chỉnh theo rủi ro ở mức ${pMetrics.sharpe >= 1 ? 'tốt' : 'cần cải thiện thông qua tái phân bổ tỉ trọng các lớp tài sản'}.`;
   
   const metricInsights = [
     {
@@ -791,7 +792,11 @@ function generateRuleBasedAnalysis(portfolioData: any, benchmark: string) {
   ];
   
   const strategicAdvice = [
-    `Cân nhắc đa dạng hóa một phần vốn sang các nhóm ngành ít tương quan khác (như Năng lượng, Tiêu dùng thiết yếu) nhằm giảm thiểu rủi ro hệ thống.`,
+    strategyContext?.target === 'sharpe'
+      ? `Sau khi tối ưu Sharpe, có thể ưu tiên duy trì phân bổ hiện tại nếu Sharpe cải thiện nhưng vẫn cần theo dõi các mã làm tăng drawdown.`
+      : strategyContext?.target === 'volatility'
+        ? `Sau khi tối ưu Volatility, danh mục phù hợp hơn với khẩu vị phòng thủ; cần kiểm tra lợi nhuận kỳ vọng có bị đánh đổi quá nhiều hay không.`
+        : `Danh mục hiện tại chưa tối ưu hóa; có thể thử tối ưu Sharpe nếu muốn tăng hiệu quả risk-return hoặc tối ưu Volatility nếu ưu tiên giảm biến động.`,
     pMetrics.sharpe < 1 
       ? `Gia tăng tỷ trọng các mã có lợi thế cạnh tranh bền vững (Moat) nhằm củng cố chỉ số Sharpe tổng thể.`
       : `Duy trì chiến lược hiện tại và xem xét tái cân bằng bán bớt một phần khi tỷ trọng các mã nóng vượt quá hạn mức mục tiêu.`,
@@ -811,7 +816,7 @@ function generateRuleBasedAnalysis(portfolioData: any, benchmark: string) {
 }
 
 app.post("/api/gemini/generate-analysis", async (req, res) => {
-  const { portfolioData, benchmark } = req.body;
+  const { portfolioData, benchmark, strategyContext } = req.body;
   if (!portfolioData) {
     return res.status(400).json({ error: "Thiếu dữ liệu danh mục" });
   }
@@ -853,8 +858,10 @@ app.post("/api/gemini/generate-analysis", async (req, res) => {
       }
 
       DỮ LIỆU:
-      Mã Benchmark: ${benchmark}
-      - Tổng lợi nhuận: ${formatPercent(portfolioData.portfolioMetrics.cumulativeReturn)}
+	      Mã Benchmark: ${benchmark}
+	      Trạng thái chiến lược: ${strategyContext?.label || 'Chưa tối ưu hóa'}
+	      Bối cảnh nhận xét: ${strategyContext?.prompt || 'Danh mục hiện tại chưa chạy tối ưu hóa. Hãy nhận xét như kết luận và khuyến nghị chiến lược phân bổ hiện tại.'}
+	      - Tổng lợi nhuận: ${formatPercent(portfolioData.portfolioMetrics.cumulativeReturn)}
       - CAGR: ${formatPercent(portfolioData.portfolioMetrics.cagr)}
       - Volatility: ${formatPercent(portfolioData.portfolioMetrics.volatility)}
       - Sharpe Ratio: ${formatNum(portfolioData.portfolioMetrics.sharpe)}
@@ -862,8 +869,14 @@ app.post("/api/gemini/generate-analysis", async (req, res) => {
       - Beta (rủi ro hệ thống): ${formatNum(portfolioData.portfolioMetrics.beta)}
       - Alpha (lợi nhuận vượt trội): ${formatPercent(portfolioData.portfolioMetrics.alpha)}
       - Tracking Error: ${formatPercent(portfolioData.portfolioMetrics.trackingError)}
-      - Information Ratio: ${formatNum(portfolioData.portfolioMetrics.informationRatio)}
-    `;
+	      - Information Ratio: ${formatNum(portfolioData.portfolioMetrics.informationRatio)}
+
+	      YÊU CẦU DIỄN GIẢI:
+	      - Viết như phần kết luận cuối cùng và khuyến nghị đầu tư cho chiến lược danh mục hiện tại.
+	      - Nếu trạng thái là đã tối ưu Sharpe, phải nhận xét rõ kết quả sau tối ưu Sharpe có cải thiện hiệu quả risk-return không và nên làm gì tiếp theo.
+	      - Nếu trạng thái là đã tối ưu Volatility, phải nhận xét rõ kết quả sau tối ưu rủi ro có phù hợp chiến lược phòng thủ không và lợi nhuận bị đánh đổi ra sao.
+	      - Nếu chưa tối ưu hóa, phải nhận xét danh mục hiện tại và gợi ý khi nào nên thử tối ưu Sharpe hoặc Volatility.
+	    `;
 
     let responseText = "";
     let success = false;
@@ -894,12 +907,12 @@ app.post("/api/gemini/generate-analysis", async (req, res) => {
       res.json({ text: responseText });
     } else {
       console.log("Tất cả model Gemini phía server đều thất bại hoặc key bị từ chối quyền truy cập. Đang dùng phân tích dự phòng bằng luật.");
-      const fallbackData = generateRuleBasedAnalysis(portfolioData, benchmark);
+      const fallbackData = generateRuleBasedAnalysis(portfolioData, benchmark, strategyContext);
       res.json({ text: JSON.stringify(fallbackData) });
     }
   } catch (outerError: any) {
     console.error("Outer error during generate-analysis: ", outerError.message);
-    const fallbackData = generateRuleBasedAnalysis(portfolioData, benchmark);
+    const fallbackData = generateRuleBasedAnalysis(portfolioData, benchmark, strategyContext);
     res.json({ text: JSON.stringify(fallbackData) });
   }
 });
