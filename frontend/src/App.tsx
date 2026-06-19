@@ -181,6 +181,52 @@ export default function App() {
     });
   };
 
+  const parseAnalysisJson = (rawText: string | null) => {
+    if (!rawText) return null;
+
+    const trimFence = (value: string) => value
+      .trim()
+      .replace(/^```(?:json)?\s*/i, '')
+      .replace(/\s*```$/i, '')
+      .trim();
+
+    const tryParse = (value: string): any | null => {
+      try {
+        const parsed = JSON.parse(value);
+        return typeof parsed === 'string' ? tryParse(parsed) : parsed;
+      } catch {
+        return null;
+      }
+    };
+
+    const cleaned = trimFence(rawText);
+    const candidates = [
+      cleaned,
+      cleaned.replace(/\\"/g, '"').replace(/\\n/g, '\n'),
+    ];
+
+    const firstBrace = cleaned.indexOf('{');
+    const lastBrace = cleaned.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+      const objectSlice = cleaned.slice(firstBrace, lastBrace + 1);
+      candidates.push(objectSlice);
+      candidates.push(objectSlice.replace(/\\"/g, '"').replace(/\\n/g, '\n'));
+    }
+
+    for (const candidate of candidates) {
+      const parsed = tryParse(candidate);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+
+    return null;
+  };
+
+  const normalizeAnalysisText = (rawText: string | undefined, fallbackText: string) => {
+    const parsed = parseAnalysisJson(rawText || '');
+    if (parsed) return JSON.stringify(parsed);
+    return fallbackText;
+  };
+
   const generateAIAnalysis = async (portfolioData: any) => {
     if (!portfolioData) return;
     setIsAiAnalysing(true);
@@ -198,7 +244,8 @@ export default function App() {
         throw new Error("HTTP error " + response.status);
       }
       const result = await response.json();
-      setAiAnalysis(result.text || generateRuleBasedAnalysis(portfolioData, benchmarkLabel));
+      const fallbackText = generateRuleBasedAnalysis(portfolioData, benchmarkLabel);
+      setAiAnalysis(normalizeAnalysisText(result.text, fallbackText));
     } catch (error) {
       console.error("AI Analysis Error:", error);
       setAiAnalysis(generateRuleBasedAnalysis(portfolioData, benchmarkLabel));
@@ -1373,12 +1420,8 @@ export default function App() {
                       
                       <div className="text-xl text-indigo-50 leading-relaxed font-medium">
                         {(() => {
-                          try {
-                            const parsed = JSON.parse(aiAnalysis);
-                            return parsed.overallSummary;
-                          } catch (e) {
-                            return aiAnalysis;
-                          }
+                          const parsed = parseAnalysisJson(aiAnalysis);
+                          return parsed?.overallSummary || "Không thể đọc định dạng phân tích. Vui lòng chạy phân tích lại.";
                         })()}
                       </div>
                     </div>
@@ -1386,12 +1429,11 @@ export default function App() {
 
                   {/* Metrics Insights */}
                   {(() => {
-                    try {
-                      const parsed = JSON.parse(aiAnalysis);
-                      if (!parsed.metricInsights) return null;
-                      return (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {parsed.metricInsights.map((insight: any, idx: number) => (
+                    const parsed = parseAnalysisJson(aiAnalysis);
+                    if (!parsed?.metricInsights) return null;
+                    return (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {parsed.metricInsights.map((insight: any, idx: number) => (
                             <motion.div 
                               key={idx}
                               initial={{ opacity: 0, x: -10 }}
@@ -1408,19 +1450,16 @@ export default function App() {
                               </p>
                             </motion.div>
                           ))}
-                        </div>
-                      );
-                    } catch (e) {
-                      return null;
-                    }
+                      </div>
+                    );
                   })()}
 
                   {/* Advice & Comparison */}
                   {(() => {
-                    try {
-                      const parsed = JSON.parse(aiAnalysis);
-                      return (
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    const parsed = parseAnalysisJson(aiAnalysis);
+                    if (!parsed) return null;
+                    return (
+                      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                           <div className="lg:col-span-2 p-8 bg-indigo-50 border border-indigo-100 rounded-[32px] space-y-6">
                             <h3 className="text-lg font-bold text-indigo-900 flex items-center gap-2">
                                <ShieldCheck size={20} className="text-indigo-500" /> Lời khuyên chiến lược
@@ -1445,11 +1484,8 @@ export default function App() {
                               {parsed.marketComparison}
                             </p>
                           </div>
-                        </div>
-                      );
-                    } catch (e) {
-                      return null;
-                    }
+                      </div>
+                    );
                   })()}
                 </motion.div>
               )}
