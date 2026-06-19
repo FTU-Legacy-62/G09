@@ -315,7 +315,7 @@ export const PortfolioForm: React.FC<PortfolioFormProps> = ({
                   <label className="block text-[9px] font-bold text-slate-400 uppercase tracking-wider mb-1 sm:hidden">Mã cổ phiếu</label>
                   <input
                     type="text"
-                    placeholder="Mã cổ phiếu (ví dụ: FPT)"
+                    placeholder="Mã cổ phiếu (ví dụ: FPT.VN)"
                     className="w-full bg-transparent text-slate-900 placeholder:text-slate-300 focus:outline-none font-bold uppercase tracking-tight text-sm"
                     value={item.ticker}
                     onChange={(e) => handleChange(index, 'ticker', e.target.value)}
