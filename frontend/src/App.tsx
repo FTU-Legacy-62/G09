@@ -878,12 +878,12 @@ export default function App() {
 
           <div className="px-6 py-4">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest font-sans">Phân tích chuyên sâu</span>
-          </div>
-          <SidebarItem icon={LayoutDashboard} label="Bảng điều khiển" tab="dashboard" />
-          <SidebarItem icon={Star} label="Đánh giá danh mục" tab="evaluation" />
-          <SidebarItem icon={Play} label="Mô phỏng tài sản" tab="simulation" />
-          <SidebarItem icon={Target} label="Tối ưu hóa tỷ trọng" tab="optimization" />
-        </nav>
+	          </div>
+	          <SidebarItem icon={LayoutDashboard} label="Bảng điều khiển" tab="dashboard" />
+	          <SidebarItem icon={Play} label="Mô phỏng tài sản" tab="simulation" />
+	          <SidebarItem icon={Target} label="Tối ưu hóa tỷ trọng" tab="optimization" />
+	          <SidebarItem icon={Star} label="Đánh giá danh mục" tab="evaluation" />
+	        </nav>
       </aside>
 
       {/* Main Content */}
@@ -1435,15 +1435,6 @@ export default function App() {
                     <BrainCircuit size={12} /> AI đang phân tích...
                   </div>}
                 </div>
-              </div>
-
-	              <div className="p-10 bg-indigo-50 border border-indigo-100 rounded-3xl space-y-4">
-                 <h3 className="font-bold text-indigo-900 flex items-center gap-2">
-                    <Info size={18} /> Tóm tắt đánh giá
-                 </h3>
-                 <p className="text-lg text-indigo-700 leading-relaxed font-medium">
-                    {data.evaluation?.summary}
-                 </p>
               </div>
 
 	              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
